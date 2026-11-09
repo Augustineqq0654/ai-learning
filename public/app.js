@@ -105,8 +105,6 @@ async function getJson(url) {
 
 async function boot() {
   Object.assign(state, loadState())
-  touchStreak()
-  renderStreak()
 
   const [n, r, p, t] = await Promise.allSettled([
     getJson('/api/news'),
@@ -120,17 +118,29 @@ async function boot() {
   projects = p.status === 'fulfilled' ? p.value : null
   tutorials = t.status === 'fulfilled' ? t.value : null
 
+  // 先定好当前阶段，再写 localStorage，否则会把未解析的 null 存进去
   if (roadmap?.currentStage && state.stage == null) state.stage = roadmap.currentStage
 
-  renderMeta()
-  renderNewsFilters()
-  renderNews()
-  renderStageSwitch()
-  renderStage()
-  renderTask()
-  renderDiscoveries()
-  renderProjects()
-  renderTutorials()
+  touchStreak()
+  renderStreak()
+
+  const page = document.body.dataset.page
+
+  if (page === 'news') {
+    renderMeta()
+    renderNewsFilters()
+    renderNews()
+  } else if (page === 'study') {
+    renderStageSwitch()
+    renderStage()
+    renderTask()
+  } else if (page === 'projects') {
+    renderDiscoveries()
+    renderProjects()
+  } else if (page === 'tutorials') {
+    renderTutorials()
+  }
+
   bindRefresh()
 }
 
@@ -138,6 +148,7 @@ async function boot() {
 
 function renderStreak() {
   const el = $('#streak')
+  if (!el) return
   if (!state.streak.days) {
     el.hidden = true
     return
@@ -148,8 +159,9 @@ function renderStreak() {
 
 function renderMeta() {
   const el = $('#meta')
+  if (!el) return
   if (!news) {
-    el.textContent = '还没有数据 · 点右上角「立即更新」抓一次'
+    el.textContent = '还没有数据 · 点右上角「更新」抓一次'
     return
   }
   const statuses = Object.values(news.sources || {})
@@ -158,6 +170,7 @@ function renderMeta() {
   el.textContent = `数据更新于 ${timeAgo(news.fetchedAt)} · ${okCount}/${statuses.length} 个源可用${stale}`
 
   const notice = $('#notice')
+  if (!notice) return
   if (news.degraded?.length) {
     notice.hidden = false
     notice.innerHTML = `<strong>${news.degraded.length} 个源本次未取到</strong>，页面显示其余源的内容。不影响使用，下次更新会自动重试。`
@@ -170,6 +183,7 @@ function renderMeta() {
 
 function renderNewsFilters() {
   const box = $('#filters')
+  if (!box) return
   const items = news?.items || []
   const present = new Set(items.map((i) => i.category))
 
@@ -189,6 +203,7 @@ function renderNewsFilters() {
 
 function renderNews() {
   const list = $('#news-list')
+  if (!list) return
 
   if (!news) {
     list.innerHTML = `<div class="empty">还没有抓到数据。先在终端跑 <code>npm run update</code>，或点右上角「立即更新」。</div>`
@@ -240,6 +255,7 @@ function currentStage() {
 
 function renderStageSwitch() {
   const box = $('#stage-switch')
+  if (!box) return
   const list = stageList()
   if (!list.length) {
     box.innerHTML = ''
@@ -266,6 +282,7 @@ function renderStageSwitch() {
 
 function renderStage() {
   const box = $('#stage-card')
+  if (!box) return
   const stage = currentStage()
 
   if (!stage) {
@@ -302,18 +319,19 @@ function nextTask(stage) {
 function renderTask() {
   const box = $('#task-card')
   const hint = $('#task-hint')
+  if (!box) return
   const stage = currentStage()
 
   if (!stage) {
     box.innerHTML = `<div class="empty">还在写学习路径。</div>`
-    hint.textContent = ''
+    if (hint) hint.textContent = ''
     return
   }
 
   const task = nextTask(stage)
   const total = stage.tasks?.length || 0
   const done = (stage.tasks || []).filter((t) => state.completed.includes(t.id)).length
-  hint.textContent = `阶段 ${stage.id} 进度 ${done}/${total}`
+  if (hint) hint.textContent = `阶段 ${stage.id} 进度 ${done}/${total}`
 
   if (!task) {
     const next = stageList().find((s) => s.id > stage.id)
@@ -365,6 +383,7 @@ function renderTask() {
 function renderDiscoveries() {
   const block = $('#discoveries-block')
   const box = $('#discoveries')
+  if (!block || !box) return
   const list = news?.discoveries || []
 
   if (!list.length) {
@@ -384,27 +403,43 @@ function renderDiscoveries() {
     .join('')
 }
 
+function tutorialCard(t) {
+  return `
+    <a class="tutorial" href="${esc(t.url)}" target="_blank" rel="noreferrer noopener">
+      <div class="tut-top">
+        <span class="tut-title">${esc(t.title)}</span>
+        <span class="tut-meta">${esc(t.source || '')} · ${esc(t.level)}</span>
+      </div>
+      <p class="tut-desc">${esc(t.desc)}</p>
+    </a>`
+}
+
 function renderTutorials() {
   const box = $('#tutorial-list')
-  const all = (tutorials?.tutorials || []).slice().sort((a, b) => a.stage - b.stage)
+  if (!box) return
 
-  $('#tutorial-count').textContent = all.length ? `(${all.length})` : ''
+  const all = (tutorials?.tutorials || []).slice().sort((a, b) => a.stage - b.stage)
 
   if (!all.length) {
     box.innerHTML = `<div class="empty">还没有教程条目。</div>`
     return
   }
 
-  box.innerHTML = all
+  const groups = new Map()
+  for (const t of all) {
+    if (!groups.has(t.stage)) groups.set(t.stage, [])
+    groups.get(t.stage).push(t)
+  }
+
+  const stageName = (id) => (roadmap?.stages || []).find((s) => s.id === id)?.name || ''
+
+  box.innerHTML = [...groups.entries()]
     .map(
-      (t) => `
-      <a class="tutorial" href="${esc(t.url)}" target="_blank" rel="noreferrer noopener">
-        <div class="tut-top">
-          <span class="tut-title">${esc(t.title)}</span>
-          <span class="tut-meta">${esc(t.source || '')} · ${esc(t.level)} · 阶段 ${t.stage}</span>
-        </div>
-        <p class="tut-desc">${esc(t.desc)}</p>
-      </a>`
+      ([stage, list]) => `
+      <section class="tut-group">
+        <h2 class="tut-group-title">阶段 ${stage}${stageName(stage) ? ` · ${esc(stageName(stage))}` : ''}<span>${list.length} 个</span></h2>
+        <div class="tutorials">${list.map(tutorialCard).join('')}</div>
+      </section>`
     )
     .join('')
 }
@@ -412,12 +447,15 @@ function renderTutorials() {
 function renderProjects() {
   const box = $('#project-list')
   const filterBox = $('#project-filters')
+  if (!box || !filterBox) return
+
   const all = projects?.projects || []
-  const stages = stageList()
 
-  $('#project-count').textContent = all.length ? `(${all.length})` : ''
+  const countEl = $('#project-count')
+  if (countEl) countEl.textContent = all.length ? `(${all.length})` : ''
 
-  const chips = [{ id: 'all', label: '全部' }, ...stages.map((s) => ({ id: String(s.id), label: `阶段 ${s.id}` }))]
+  const stageIds = [...new Set(all.map((p) => p.stage))].sort((a, b) => a - b)
+  const chips = [{ id: 'all', label: '全部' }, ...stageIds.map((id) => ({ id: String(id), label: `阶段 ${id}` }))]
   filterBox.innerHTML = chips
     .map((c) => `<button class="filter ${projectFilter === c.id ? 'on' : ''}" data-stage="${c.id}">${c.label}</button>`)
     .join('')
@@ -470,6 +508,7 @@ function renderProjects() {
 
 function bindRefresh() {
   const btn = $('#refresh')
+  if (!btn) return
   btn.addEventListener('click', async () => {
     btn.disabled = true
     btn.textContent = '更新中…'
@@ -482,7 +521,6 @@ function bindRefresh() {
       }
       if (!data.ok) throw new Error(data.error || '抓取失败')
       news = await getJson('/api/news')
-      if (roadmap?.currentStage && state.stage == null) state.stage = roadmap.currentStage
       renderMeta()
       renderNewsFilters()
       renderNews()
@@ -492,11 +530,12 @@ function bindRefresh() {
       toast(`更新失败：${err.message}`)
     } finally {
       btn.disabled = false
-      btn.textContent = '立即更新'
+      btn.textContent = '更新'
     }
   })
 }
 
 boot().catch((err) => {
-  $('#meta').textContent = `加载失败：${err.message}`
+  const el = $('#meta')
+  if (el) el.textContent = `加载失败：${err.message}`
 })

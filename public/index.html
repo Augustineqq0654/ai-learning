@@ -3,74 +3,35 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI 学习驾驶舱</title>
+    <title>今日速览 · AI 学习驾驶舱</title>
     <link rel="stylesheet" href="/style.css" />
   </head>
-  <body>
-    <div class="wrap">
-      <header class="top">
-        <div class="brand">
-          <h1>AI 学习驾驶舱</h1>
-          <p class="sub" id="meta">正在加载…</p>
+  <body data-page="news">
+    <nav class="nav">
+      <div class="nav-inner">
+        <a class="nav-brand" href="/">AI 学习驾驶舱</a>
+        <div class="nav-links">
+          <a class="nav-link active" href="/">速览</a>
+          <a class="nav-link" href="/study.html">学习</a>
+          <a class="nav-link" href="/projects.html">项目库</a>
+          <a class="nav-link" href="/tutorials.html">教程</a>
         </div>
-        <div class="top-actions">
+        <div class="nav-actions">
           <span class="streak" id="streak" hidden></span>
-          <button class="btn" id="refresh">立即更新</button>
+          <button class="btn btn-sm" id="refresh">更新</button>
         </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="page-head">
+        <h1>今日速览</h1>
+        <p class="sub" id="meta">正在加载…</p>
       </header>
 
       <div class="notice" id="notice" hidden></div>
-
-      <main>
-        <section class="block">
-          <div class="block-head">
-            <h2>今日速览</h2>
-            <div class="filters" id="filters"></div>
-          </div>
-          <div class="list" id="news-list"></div>
-        </section>
-
-        <section class="block">
-          <div class="block-head">
-            <h2>我在这一步</h2>
-            <div class="stage-switch" id="stage-switch"></div>
-          </div>
-          <div class="panel" id="stage-card"></div>
-        </section>
-
-        <section class="block">
-          <div class="block-head">
-            <h2>今日任务</h2>
-            <span class="hint" id="task-hint"></span>
-          </div>
-          <div id="task-card"></div>
-        </section>
-
-        <section class="block">
-          <details class="projects">
-            <summary class="block-head">
-              <h2>项目库 <span class="count" id="project-count"></span></h2>
-              <span class="hint">9 个把 AI 用出效果的</span>
-            </summary>
-            <div class="sub-block" id="discoveries-block" hidden>
-              <h3 class="sub-title">今日新发现 <span class="hint">GitHub 上今天冒头的 AI 仓库</span></h3>
-              <div class="discoveries" id="discoveries"></div>
-            </div>
-            <div class="filters" id="project-filters"></div>
-            <div class="grid" id="project-list"></div>
-          </details>
-        </section>
-
-        <section class="block">
-          <details class="projects">
-            <summary class="block-head">
-              <h2>精选教程 <span class="count" id="tutorial-count"></span></h2>
-              <span class="hint">常驻，按阶段排</span>
-            </summary>
-            <div class="tutorials" id="tutorial-list"></div>
-          </details>
-        </section>
-      </main>
+      <div class="filters" id="filters"></div>
+      <div class="list" id="news-list"></div>
 
       <footer class="foot">
         <span>数据只存在本机 · 进度只存在浏览器</span>

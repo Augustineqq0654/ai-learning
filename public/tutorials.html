@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>精选教程 · AI 学习驾驶舱</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body data-page="tutorials">
+    <nav class="nav">
+      <div class="nav-inner">
+        <a class="nav-brand" href="/">AI 学习驾驶舱</a>
+        <div class="nav-links">
+          <a class="nav-link" href="/">速览</a>
+          <a class="nav-link" href="/study.html">学习</a>
+          <a class="nav-link" href="/projects.html">项目库</a>
+          <a class="nav-link active" href="/tutorials.html">教程</a>
+        </div>
+        <div class="nav-actions">
+          <span class="streak" id="streak" hidden></span>
+          <button class="btn btn-sm" id="refresh">更新</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="page-head">
+        <h1>精选教程</h1>
+        <p class="sub">优先 GitHub / 知乎 / 博客园 · 链接均实测可访问 · 按学习阶段排列</p>
+      </header>
+
+      <div id="tutorial-list"></div>
+
+      <footer class="foot">
+        <span>教程是常驻的，不随新闻更新 · 失效可以直接改 data/tutorials.json</span>
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+    <script src="/app.js"></script>
+  </body>
+</html>

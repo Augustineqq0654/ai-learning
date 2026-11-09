@@ -1,0 +1,83 @@
+{
+  "currentStage": 2,
+  "proxy": "",
+  "summaryMode": "rule",
+  "sources": [
+    {
+      "id": "aihot",
+      "name": "AIHOT",
+      "type": "aihot",
+      "url": "https://aihot.news/api/v1/agent/latest",
+      "hotUrl": "https://aihot.news/api/v1/agent/hot",
+      "weight": 0.85,
+      "lang": "zh",
+      "enabled": true
+    },
+    {
+      "id": "qbitai",
+      "name": "量子位",
+      "type": "rss",
+      "url": "https://www.qbitai.com/feed",
+      "weight": 0.8,
+      "lang": "zh",
+      "enabled": true
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "type": "rss",
+      "url": "https://openai.com/news/rss.xml",
+      "weight": 1.0,
+      "lang": "en",
+      "enabled": true
+    },
+    {
+      "id": "deepmind",
+      "name": "Google DeepMind",
+      "type": "rss",
+      "url": "https://deepmind.google/blog/rss.xml",
+      "weight": 0.95,
+      "lang": "en",
+      "enabled": true
+    },
+    {
+      "id": "simonw",
+      "name": "Simon Willison",
+      "type": "rss",
+      "url": "https://simonwillison.net/atom/everything/",
+      "weight": 0.7,
+      "lang": "en",
+      "aiOnly": true,
+      "enabled": true
+    },
+    {
+      "id": "hn",
+      "name": "Hacker News",
+      "type": "rss",
+      "url": "https://news.ycombinator.com/rss",
+      "weight": 0.55,
+      "lang": "en",
+      "aiOnly": true,
+      "ignoreDescription": true,
+      "fallbackSummary": "Hacker News 今日热门条目，评论区常有一手经验。",
+      "enabled": true
+    },
+    {
+      "id": "github",
+      "name": "GitHub Trending",
+      "type": "github",
+      "url": "https://github.com/trending?since=daily",
+      "weight": 0.65,
+      "lang": "en",
+      "aiOnly": true,
+      "kind": "repo",
+      "enabled": true
+    }
+  ],
+  "limits": {
+    "maxItems": 8,
+    "maxAgeHours": 96,
+    "timeoutMs": 15000,
+    "concurrency": 4
+  }
+}

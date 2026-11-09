@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>配色方案预览 · 纸墨</title>
+    <style>
+      :root {
+        --bg: #f5f4f0;
+        --surface: #ffffff;
+        --surface-soft: #faf9f6;
+        --line: #e6e3dc;
+        --line-soft: #efede7;
+        --ink: #1e1c18;
+        --ink-2: #46423b;
+        --muted: #5f5a51;
+        --muted-2: #6f6a60;
+        --accent: #2e6b52;
+        --accent-ink: #245843;
+        --accent-soft: rgba(46, 107, 82, 0.08);
+        --cat-product: #2d5ca8;
+        --cat-method: #6a4ea6;
+        --cat-resource: #1e7a57;
+        --cat-industry: #96601f;
+        --radius: 10px;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: 44px 24px 80px;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: 15px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .wrap { max-width: 860px; margin: 0 auto; }
+
+      .label {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        color: var(--muted-2);
+        text-transform: uppercase;
+        margin: 34px 0 12px;
+      }
+
+      /* 顶部 */
+      .top {
+        display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+        padding-bottom: 18px; border-bottom: 1px solid var(--line); margin-bottom: 26px;
+      }
+      h1 { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: 0.2px; }
+      .sub { margin: 5px 0 0; font-size: 12.5px; color: var(--muted-2); }
+      .streak {
+        font-size: 12.5px; color: var(--accent-ink); background: var(--accent-soft);
+        border-radius: 100px; padding: 3px 11px; margin-right: 10px;
+      }
+      .btn {
+        font: inherit; font-size: 13px; color: var(--ink-2); background: var(--surface);
+        border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px; cursor: pointer;
+        box-shadow: 0 1px 2px rgba(30, 28, 24, 0.04);
+      }
+      .btn-primary {
+        color: #fff; background: var(--accent); border-color: var(--accent); font-weight: 500;
+        box-shadow: 0 1px 2px rgba(46, 107, 82, 0.24);
+      }
+
+      h2 { margin: 0 0 14px; font-size: 14.5px; font-weight: 600; letter-spacing: 0.3px; }
+      .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+
+      .filters { display: flex; gap: 6px; }
+      .filter {
+        font: inherit; font-size: 12px; color: var(--muted); background: transparent;
+        border: 1px solid var(--line); border-radius: 100px; padding: 2px 10px; cursor: pointer;
+      }
+      .filter.on { color: var(--ink); background: var(--surface); border-color: #d8d4cb; box-shadow: 0 1px 2px rgba(30,28,24,.04); }
+
+      /* 新闻 */
+      .item { padding: 15px 0; border-top: 1px solid var(--line-soft); }
+      .item:first-of-type { border-top: none; padding-top: 2px; }
+      .row { display: flex; align-items: baseline; gap: 9px; }
+      .chip {
+        flex: none; font-size: 11px; line-height: 1.6; padding: 0 7px; border-radius: 4px; font-weight: 500;
+      }
+      .c-product { color: var(--cat-product); background: rgba(45, 92, 168, 0.09); }
+      .c-method { color: var(--cat-method); background: rgba(106, 78, 166, 0.09); }
+      .c-resource { color: var(--cat-resource); background: rgba(30, 122, 87, 0.09); }
+      .c-industry { color: var(--cat-industry); background: rgba(150, 96, 31, 0.09); }
+      .title { font-size: 15px; font-weight: 500; line-height: 1.55; color: var(--ink); text-decoration: none; }
+      .title:hover { color: var(--accent); }
+      .summary { margin: 5px 0 0; font-size: 13px; color: var(--muted); line-height: 1.65; }
+      .meta { margin-top: 6px; font-size: 12px; color: var(--muted-2); display: flex; gap: 6px; }
+      .also { color: var(--accent-ink); opacity: 0.75; }
+
+      /* 阶段卡 */
+      .panel {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 20px 22px; box-shadow: 0 1px 2px rgba(30, 28, 24, 0.035);
+      }
+      .panel h3 { margin: 0; font-size: 16px; font-weight: 600; display: inline; }
+      .idx { font-size: 12px; color: var(--muted-2); margin-left: 8px; }
+      .headline { margin: 6px 0 0; font-size: 13.5px; color: var(--muted); }
+      .goal { margin: 14px 0 0; font-size: 13.5px; color: var(--ink-2); }
+      .concepts { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+      .concept {
+        font-size: 11.5px; color: var(--muted); background: var(--surface-soft);
+        border: 1px solid var(--line-soft); border-radius: 4px; padding: 1px 8px;
+        font-family: ui-monospace, Consolas, monospace;
+      }
+      .pass { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-soft); font-size: 13px; color: var(--muted); }
+      .pass b { color: var(--ink); font-weight: 500; }
+      .progress { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+      .bar { flex: 1; height: 4px; background: #e9e6df; border-radius: 2px; overflow: hidden; }
+      .bar span { display: block; height: 100%; width: 34%; background: var(--accent); border-radius: 2px; }
+      .plabel { font-size: 12px; color: var(--muted-2); font-variant-numeric: tabular-nums; }
+
+      /* 任务卡 */
+      .task {
+        background: var(--surface-soft);
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--accent);
+        border-radius: var(--radius);
+        padding: 20px 22px;
+      }
+      .tid { font-size: 11.5px; color: var(--muted-2); font-family: ui-monospace, Consolas, monospace; }
+      .task h3 { margin: 4px 0 0; font-size: 17px; font-weight: 600; }
+      .facts { display: flex; gap: 18px; margin-top: 12px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+      .facts b { color: var(--ink); font-weight: 500; }
+      .refs { margin-top: 12px; font-size: 13px; }
+      .refs a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid rgba(46, 107, 82, 0.3); }
+      .actions { display: flex; gap: 10px; margin-top: 18px; }
+
+      .note {
+        margin-top: 36px; padding: 16px 18px; background: var(--surface-soft);
+        border: 1px solid var(--line); border-radius: var(--radius); font-size: 12.5px; color: var(--muted);
+      }
+      .note code { color: var(--accent-ink); background: rgba(46,107,82,.07); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+      .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 8px; }
+      .sw { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+      .sw i { display: block; height: 40px; }
+      .sw div { padding: 6px 9px; font-size: 11.5px; color: var(--muted); }
+      .sw b { display: block; color: var(--ink-2); font-weight: 500; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div>
+          <h1>AI 学习驾驶舱</h1>
+          <p class="sub">数据更新于 12 分钟前 · 7/7 个源可用</p>
+        </div>
+        <div>
+          <span class="streak">连续学习 6 天</span>
+          <button class="btn">立即更新</button>
+        </div>
+      </header>
+
+      <div class="head">
+        <h2>今日速览</h2>
+        <div class="filters">
+          <button class="filter on">全部</button>
+          <button class="filter">产品与工具</button>
+          <button class="filter">技术方法</button>
+          <button class="filter">行业动态</button>
+        </div>
+      </div>
+
+      <article class="item">
+        <div class="row">
+          <span class="chip c-method">技术方法</span>
+          <a class="title" href="#">Agent memory needs its OpenTelemetry moment</a>
+        </div>
+        <p class="summary">把 Agent 的记忆当成可观测性问题来解，而不是靠 prompt 硬凑。里面有具体的埋点设计。</p>
+        <div class="meta"><span>Simon Willison</span><span>·</span><span>3 小时前</span><span>·</span><span class="also">另有 2 家报道</span></div>
+      </article>
+
+      <article class="item">
+        <div class="row">
+          <span class="chip c-product">产品与工具</span>
+          <a class="title" href="#">Anthropic 发布研究拆解 Claude 智能体记忆机制</a>
+        </div>
+        <p class="summary">IT之家·人工智能 等 3 家来源在报道。</p>
+        <div class="meta"><span>AIHOT</span><span>·</span><span>5 小时前</span></div>
+      </article>
+
+      <article class="item">
+        <div class="row">
+          <span class="chip c-industry">行业动态</span>
+          <a class="title" href="#">Anthropic 34 亿美元采购 1.7GW 燃气发电机组</a>
+        </div>
+        <p class="summary">算力扩张开始受电力约束，这条对判断模型价格走向有用。</p>
+        <div class="meta"><span>AIHOT</span><span>·</span><span>7 小时前</span></div>
+      </article>
+
+      <p class="label">我在这一步</p>
+      <div class="panel">
+        <div><h3>应用骨架</h3><span class="idx">阶段 2 / 5</span></div>
+        <p class="headline">从能调 API，到能做出一个不崩、成本可控的工具</p>
+        <p class="goal">把一次性的脚本变成能连续用、出错不崩、知道花多少钱的应用骨架。后面 RAG 和 Agent 都建在这上面。</p>
+        <div class="concepts">
+          <span class="concept">流式输出</span>
+          <span class="concept">上下文管理</span>
+          <span class="concept">结构化输出</span>
+          <span class="concept">错误重试</span>
+        </div>
+        <div class="pass"><b>过关标准</b>　做出一个能连续对话、出错不崩、能看到成本的小工具。</div>
+        <div class="progress">
+          <div class="bar"><span></span></div>
+          <span class="plabel">2/6</span>
+        </div>
+      </div>
+
+      <p class="label">今日任务</p>
+      <div class="task">
+        <div class="tid">任务 2.1</div>
+        <h3>实现流式输出</h3>
+        <div class="facts">
+          <span>约 <b>4 小时</b></span>
+          <span>交付物：<b>打字机效果的前端页面</b></span>
+        </div>
+        <div class="refs"><a href="#">OpenAI 流式响应</a></div>
+        <div class="actions">
+          <button class="btn btn-primary">完成</button>
+          <button class="btn">今天跳过</button>
+        </div>
+      </div>
+
+      <p class="label">色彩变量</p>
+      <div class="swatches">
+        <div class="sw"><i style="background:#f5f4f0"></i><div><b>--bg</b>#F5F4F0</div></div>
+        <div class="sw"><i style="background:#ffffff"></i><div><b>--surface</b>#FFFFFF</div></div>
+        <div class="sw"><i style="background:#faf9f6"></i><div><b>--surface-soft</b>#FAF9F6</div></div>
+        <div class="sw"><i style="background:#1e1c18"></i><div><b>--ink</b>#1E1C18</div></div>
+        <div class="sw"><i style="background:#46423b"></i><div><b>--ink-2</b>#46423B</div></div>
+        <div class="sw"><i style="background:#6e6960"></i><div><b>--muted</b>#6E6960</div></div>
+        <div class="sw"><i style="background:#2e6b52"></i><div><b>--accent</b>#2E6B52</div></div>
+        <div class="sw"><i style="background:#2d5ca8"></i><div><b>产品</b>#2D5CA8</div></div>
+        <div class="sw"><i style="background:#6a4ea6"></i><div><b>方法</b>#6A4EA6</div></div>
+        <div class="sw"><i style="background:#1e7a57"></i><div><b>教程</b>#1E7A57</div></div>
+        <div class="sw"><i style="background:#96601f"></i><div><b>行业</b>#96601F</div></div>
+      </div>
+
+      <div class="note">
+        正文对比度 <code>≈14:1</code>，次要文字 <code>≈5.2:1</code>，标签 <code>≈4.3:1</code>。
+        背景不用纯白，避免大面积高亮度刺眼；卡片用纯白制造轻微浮起感。
+      </div>
+    </div>
+  </body>
+</html>

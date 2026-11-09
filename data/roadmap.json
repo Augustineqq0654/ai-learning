@@ -1,0 +1,248 @@
+{
+  "currentStage": 2,
+  "updatedAt": "2026-11-09",
+  "stages": [
+    {
+      "id": 1,
+      "name": "摸清边界",
+      "headline": "先知道它能干什么、不能干什么",
+      "done": true,
+      "goal": "不写代码，先用两周把 AI 当成一个能干活的同事来摸底：哪些事它做得比你好，哪些事它一定会出错。",
+      "concepts": ["能力边界", "多轮对话", "上下文"],
+      "passCriteria": "能说出三件放心交给它的事，和三件绝对不能让它单独做的事。",
+      "tags": ["对话", "能力边界", "上下文"],
+      "tasks": [
+        {
+          "id": "1.1",
+          "title": "列一张「能交给 AI」和「不能交给 AI」的清单",
+          "minutes": 30,
+          "deliverable": "各 5 条的清单，贴在桌前",
+          "refs": [{ "label": "Learning Prompt", "url": "https://github.com/thinkingjimmy/Learning-Prompt" }]
+        },
+        {
+          "id": "1.2",
+          "title": "跑一次多轮对话，观察上下文怎么影响回答",
+          "minutes": 30,
+          "deliverable": "记录：同一问题在第 1 轮和第 5 轮的答案差异",
+          "refs": []
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "会问",
+      "headline": "同样的问题，问法不同结果差十倍",
+      "done": false,
+      "goal": "把「随口问」升级成「有结构的问」：说清角色、背景、要求、格式、验收标准。练到不用想就能写出模板。",
+      "concepts": ["五段式模板", "示例驱动", "任务拆解", "迭代"],
+      "passCriteria": "手里有 5 个自己常用的模板，同样的事第二次做时间减半。",
+      "tags": ["提示词", "模板", "上下文", "示例", "拆解", "迭代"],
+      "tasks": [
+        {
+          "id": "2.1",
+          "title": "写第一个五段式模板",
+          "minutes": 60,
+          "deliverable": "角色 / 背景 / 要求 / 输出格式 / 验收标准，五段齐全的一条提示词",
+          "refs": [{ "label": "如何高效书写提示词", "url": "https://www.cnblogs.com/gccbuaa/p/19437248" }]
+        },
+        {
+          "id": "2.2",
+          "title": "用示例代替形容词（few-shot）",
+          "minutes": 60,
+          "deliverable": "同一任务，加 3 个样例前后各跑一次，对比差异",
+          "refs": [{ "label": "AWS：16 种提示词方式", "url": "https://aws.amazon.com/cn/blogs/china/sixteen-ways-of-prompt-engineering/" }]
+        },
+        {
+          "id": "2.3",
+          "title": "让它先反问，再回答",
+          "minutes": 45,
+          "deliverable": "一条要求「信息不足时先提问」的提示词，并验证它真的会问",
+          "refs": []
+        },
+        {
+          "id": "2.4",
+          "title": "把一个大任务拆成三步",
+          "minutes": 60,
+          "deliverable": "拆解记录：一次问 vs 分三步问，哪个结果更可用",
+          "refs": []
+        },
+        {
+          "id": "2.5",
+          "title": "建自己的提示词库，先存 5 个",
+          "minutes": 120,
+          "deliverable": "一个文档或备忘录，5 个能直接复用的模板",
+          "refs": [{ "label": "LangGPT 结构化提示词", "url": "https://github.com/langgptai/LangGPT" }]
+        },
+        {
+          "id": "2.6",
+          "title": "判断「答得不对」是提示词问题还是能力问题",
+          "minutes": 45,
+          "deliverable": "一份对照表：信息没给够 / 要求太模糊 / 它确实做不到",
+          "refs": []
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "会喂",
+      "headline": "给对资料，比会提问更重要",
+      "done": false,
+      "goal": "学会把文档、网页、录音喂进去，并且知道它什么时候在编。回答必须能点回原文，这是底线。",
+      "concepts": ["知识库", "引用溯源", "幻觉识别", "长文档"],
+      "passCriteria": "有一个自己的主题知识库，问答带出处，能识别出它编造的部分。",
+      "tags": ["知识库", "文档", "引用", "幻觉", "资料", "上传"],
+      "tasks": [
+        {
+          "id": "3.1",
+          "title": "长文档分三轮读",
+          "minutes": 60,
+          "deliverable": "一份合同或说明书的三轮阅读记录",
+          "refs": [{ "label": "NotebookLM 官方帮助", "url": "https://support.google.com/gemininotebook/?hl=zh-Hans" }]
+        },
+        {
+          "id": "3.2",
+          "title": "要求每条回答带出处，并学会核对",
+          "minutes": 45,
+          "deliverable": "抽查 5 条回答，看引用是否真的支持结论",
+          "refs": []
+        },
+        {
+          "id": "3.3",
+          "title": "建第一个主题知识库",
+          "minutes": 90,
+          "deliverable": "一个只放单一主题的库，能问答",
+          "refs": [{ "label": "知乎：NotebookLM 私人知识库", "url": "https://zhuanlan.zhihu.com/p/1903927872172832593" }]
+        },
+        {
+          "id": "3.4",
+          "title": "识别幻觉：让它明确说「资料里没有」",
+          "minutes": 45,
+          "deliverable": "10 个问题的测试，统计它编了几次",
+          "refs": []
+        },
+        {
+          "id": "3.5",
+          "title": "把表格和截图喂给 AI",
+          "minutes": 60,
+          "deliverable": "一次真实的表格分析记录，含它给错的步骤",
+          "refs": [{ "label": "ChatExcel 提示词", "url": "https://chatexcel.com/blog/chatexcel-pro-prompt/" }]
+        },
+        {
+          "id": "3.6",
+          "title": "把这次分析沉淀成可复用的提问清单",
+          "minutes": 60,
+          "deliverable": "一份「下次照着问」的清单",
+          "refs": []
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "会串",
+      "headline": "把重复的事交给它，而不是每次重新问",
+      "done": false,
+      "goal": "用零代码平台把「输入 → 处理 → 输出」串起来，做一个每天真的在跑的助手。不写代码，但要能维护。",
+      "concepts": ["工作流", "零代码助手", "知识库配置", "发布"],
+      "passCriteria": "有一个自己每天在用、且答错时知道该补什么的助手。",
+      "tags": ["工作流", "零代码", "扣子", "coze", "智能体", "自动化"],
+      "tasks": [
+        {
+          "id": "4.1",
+          "title": "找出你每天重复做的 3 件事",
+          "minutes": 30,
+          "deliverable": "按「频率 × 规则清晰度」排序，选出一件先做",
+          "refs": []
+        },
+        {
+          "id": "4.2",
+          "title": "在扣子里搭第一个助手，只干一件事",
+          "minutes": 120,
+          "deliverable": "能对话、输出格式固定的助手",
+          "refs": [{ "label": "知乎：从零搭 Coze 智能体", "url": "https://zhuanlan.zhihu.com/p/1975662556375961782" }]
+        },
+        {
+          "id": "4.3",
+          "title": "给它配知识库，让它答得准",
+          "minutes": 90,
+          "deliverable": "上传 5-10 份资料，回答能引用",
+          "refs": [{ "label": "扣子官方快速开始", "url": "https://docs.coze.cn/guides_quickstart" }]
+        },
+        {
+          "id": "4.4",
+          "title": "串成工作流：输入 → 处理 → 输出",
+          "minutes": 120,
+          "deliverable": "一次能自动跑完的完整流程",
+          "refs": [{ "label": "博客园：Coze 从 0 到 1", "url": "https://www.cnblogs.com/tangshiye/p/19033849" }]
+        },
+        {
+          "id": "4.5",
+          "title": "发布到飞书或微信，自己用一周",
+          "minutes": 60,
+          "deliverable": "7 天使用记录，标注每次答错的地方",
+          "refs": []
+        },
+        {
+          "id": "4.6",
+          "title": "把失败案例改成「补资料」而不是「改提示词」",
+          "minutes": 60,
+          "deliverable": "一份失败归因表",
+          "refs": []
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "成习惯",
+      "headline": "从偶尔用，到离不开但不依赖",
+      "done": false,
+      "goal": "把 AI 变成稳定的工作方式：有模板、有校验、有量化，也知道什么时候不该用它。",
+      "concepts": ["模板沉淀", "人工校验", "效果量化", "团队复用"],
+      "passCriteria": "能说清楚哪个环节用 AI 省了多少时间，并且出错率没有变高。",
+      "tags": ["沉淀", "复盘", "团队", "习惯", "评估"],
+      "tasks": [
+        {
+          "id": "5.1",
+          "title": "建一个共用模板库",
+          "minutes": 90,
+          "deliverable": "至少 10 个模板，别人能看懂怎么用",
+          "refs": []
+        },
+        {
+          "id": "5.2",
+          "title": "给每个 AI 产出加一道人工校验",
+          "minutes": 45,
+          "deliverable": "一份「哪些必须核对」的清单",
+          "refs": []
+        },
+        {
+          "id": "5.3",
+          "title": "量化效果：这件事以前多久、现在多久",
+          "minutes": 60,
+          "deliverable": "一张前后对比表，至少 5 项",
+          "refs": []
+        },
+        {
+          "id": "5.4",
+          "title": "把踩过的坑写成 checklist",
+          "minutes": 60,
+          "deliverable": "一页纸，新人能直接用",
+          "refs": []
+        },
+        {
+          "id": "5.5",
+          "title": "教一个同事或家人用起来",
+          "minutes": 60,
+          "deliverable": "对方能独立完成一次",
+          "refs": []
+        },
+        {
+          "id": "5.6",
+          "title": "每月复盘：哪些该交给 AI，哪些不该",
+          "minutes": 60,
+          "deliverable": "一份调整后的分工清单",
+          "refs": []
+        }
+      ]
+    }
+  ]
+}

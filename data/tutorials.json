@@ -1,0 +1,149 @@
+{
+  "updatedAt": "2026-11-09",
+  "note": "面向「怎么把 AI 用好」，不是「怎么开发 AI」。优先收录 GitHub、知乎、博客园的实测可用链接，其余为官方文档。",
+  "tutorials": [
+    {
+      "id": "learning-prompt",
+      "title": "Learning Prompt",
+      "url": "https://github.com/thinkingjimmy/Learning-Prompt",
+      "desc": "中文写得最好的提示词入门，从「为什么这样问」讲到具体场景，例子能直接抄。先看这个，其他都是补充。",
+      "source": "GitHub",
+      "stage": 2,
+      "level": "入门",
+      "lang": "zh",
+      "tag": "提示词"
+    },
+    {
+      "id": "langgpt",
+      "title": "LangGPT 结构化提示词",
+      "url": "https://github.com/langgptai/LangGPT",
+      "desc": "把随手写的提示词升级成有结构的模板：角色、目标、约束、输出格式。适合做自己提示词库时参考。",
+      "source": "GitHub",
+      "stage": 2,
+      "level": "进阶",
+      "lang": "zh",
+      "tag": "提示词"
+    },
+    {
+      "id": "prompt-cnblogs",
+      "title": "如何高效书写提示词",
+      "url": "https://www.cnblogs.com/gccbuaa/p/19437248",
+      "desc": "一篇讲清楚提示词的核心概念和常见坑，中文、免费、不用注册，适合通勤路上看完。",
+      "source": "博客园",
+      "stage": 2,
+      "level": "入门",
+      "lang": "zh",
+      "tag": "提示词"
+    },
+    {
+      "id": "aws-prompt",
+      "title": "提示词工程的 16 种方式",
+      "url": "https://aws.amazon.com/cn/blogs/china/sixteen-ways-of-prompt-engineering/",
+      "desc": "官方博客，把提示词技巧按场景分了 16 类。当成查漏补缺的目录用，不用从头读。",
+      "source": "AWS",
+      "stage": 2,
+      "level": "进阶",
+      "lang": "zh",
+      "tag": "提示词"
+    },
+    {
+      "id": "meeting-gemini",
+      "title": "用 Gemini 做「录音分析大师」",
+      "url": "https://zhuanlan.zhihu.com/p/1916463762975732914",
+      "desc": "完整走一遍录音 → 纪要 → 待办，提示词直接给了。照做一次就知道会议纪要该怎么让 AI 干。",
+      "source": "知乎",
+      "stage": 2,
+      "level": "入门",
+      "lang": "zh",
+      "tag": "语音"
+    },
+    {
+      "id": "tencent-minutes",
+      "title": "语音转文字 → 会议纪要",
+      "url": "https://developer.cloud.tencent.com/article/2650436",
+      "desc": "腾讯云社区，含转写工具对比和两套 prompt 模板（转录稿整理、纪要生成），可直接抄。",
+      "source": "腾讯云社区",
+      "stage": 2,
+      "level": "入门",
+      "lang": "zh",
+      "tag": "语音"
+    },
+    {
+      "id": "notebooklm-zhihu",
+      "title": "用 NotebookLM 做私人知识库",
+      "url": "https://zhuanlan.zhihu.com/p/1903927872172832593",
+      "desc": "实测向的文章，讲了资料怎么组织、提问怎么问、什么时候该回原文。看完就能建自己的第一个库。",
+      "source": "知乎",
+      "stage": 3,
+      "level": "入门",
+      "lang": "zh",
+      "tag": "知识库"
+    },
+    {
+      "id": "notebooklm-help",
+      "title": "NotebookLM 官方帮助",
+      "url": "https://support.google.com/gemininotebook/?hl=zh-Hans",
+      "desc": "官方说明，功能边界写得很清楚。碰到「为什么它答不出来」时，先来这里看限制。",
+      "source": "官方",
+      "stage": 3,
+      "level": "入门",
+      "lang": "zh",
+      "tag": "知识库"
+    },
+    {
+      "id": "coze-zhihu",
+      "title": "从零搭一个 Coze 智能体",
+      "url": "https://zhuanlan.zhihu.com/p/1975662556375961782",
+      "desc": "喂饭级教程：创建、写人设、配知识库、发布，一步一张图。零基础也能跟着做出第一个。",
+      "source": "知乎",
+      "stage": 4,
+      "level": "入门",
+      "lang": "zh",
+      "tag": "零代码"
+    },
+    {
+      "id": "coze-cnblogs",
+      "title": "Coze 实战：0 到 1 搭工作流",
+      "url": "https://www.cnblogs.com/tangshiye/p/19033849",
+      "desc": "以「一键改写小红书图文」为例，讲清工作流节点怎么串。比只看文档更容易理解。",
+      "source": "博客园",
+      "stage": 4,
+      "level": "进阶",
+      "lang": "zh",
+      "tag": "零代码"
+    },
+    {
+      "id": "coze-docs",
+      "title": "扣子官方：搭建第一个智能体",
+      "url": "https://docs.coze.cn/guides_quickstart",
+      "desc": "官方快速开始。注意低代码平台已不对新用户开放，新注册要走扣子编程，文档里写明了入口。",
+      "source": "官方",
+      "stage": 4,
+      "level": "入门",
+      "lang": "zh",
+      "tag": "零代码"
+    },
+    {
+      "id": "agents-from-zero",
+      "title": "ai-agents-from-zero",
+      "url": "https://github.com/didilili/ai-agents-from-zero",
+      "desc": "中文，从提示词讲到 Agent 的基本用法。只读前半部分就够日常用了，后半部分可以跳过。",
+      "source": "GitHub",
+      "stage": 4,
+      "level": "进阶",
+      "lang": "zh",
+      "tag": "工作流"
+    },
+    {
+      "id": "chatexcel-prompt",
+      "title": "AI 表格分析：有效提示词",
+      "url": "https://chatexcel.com/blog/chatexcel-pro-prompt/",
+      "desc": "把「清洗、查找、计数、合并、拆分」拆成可复制的说法。问表格不会表达时翻这个。",
+      "source": "ChatExcel",
+      "stage": 2,
+      "level": "入门",
+      "lang": "zh",
+      "tag": "表格"
+    }
+  ]
+}

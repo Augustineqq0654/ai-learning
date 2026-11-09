@@ -1,0 +1,15 @@
+{
+  "name": "ai-learning",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AI 学习驾驶舱 —— 每天知道该学什么、今天有什么值得看",
+  "scripts": {
+    "update": "node fetch-data.js",
+    "dev": "node server.js",
+    "daily": "node fetch-data.js && node server.js"
+  },
+  "dependencies": {
+    "undici": "^8.12.4"
+  }
+}

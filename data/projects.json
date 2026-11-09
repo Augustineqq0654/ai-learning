@@ -1,0 +1,197 @@
+{
+  "updatedAt": "2026-11-09",
+  "note": "9 个「把 AI 用出效果」的项目。全部不需要写代码，用现成工具 + 提示词就能做完。标准是：做完第二天就能用上。",
+  "projects": [
+    {
+      "id": "prompt-library",
+      "title": "搭一个自己的提示词库",
+      "problem": "每次都要重新描述一遍需求，AI 给的答案时好时坏",
+      "oneLiner": "把每周重复的 5 件事各写一个模板，用一周再回头改",
+      "difficulty": 1,
+      "hours": 2,
+      "stage": 2,
+      "stack": ["提示词", "模板沉淀"],
+      "payoff": "同样的事第二次做，时间至少减半",
+      "steps": [
+        "列出你每周至少做 3 次的事：写邮件、改文案、总结会议、查资料",
+        "每件事写一个模板，固定五段：角色、背景、要求、输出格式、验收标准",
+        "连用一周，哪次结果不满意就改模板，而不是每次现场改提示词",
+        "把最好用的 3 个存到手机备忘录，随时能调出来"
+      ],
+      "refs": [
+        { "label": "Learning Prompt（中文，最推荐先看）", "url": "https://github.com/thinkingjimmy/Learning-Prompt" },
+        { "label": "博客园：如何高效书写提示词", "url": "https://www.cnblogs.com/gccbuaa/p/19437248" },
+        { "label": "AWS：提示词工程的 16 种方式", "url": "https://aws.amazon.com/cn/blogs/china/sixteen-ways-of-prompt-engineering/" }
+      ]
+    },
+    {
+      "id": "meeting-minutes",
+      "title": "会议录音 → 纪要 + 行动项",
+      "problem": "开完会记不住谁答应了什么，散会就失忆",
+      "oneLiner": "录音转成文字，用固定提示词逼出「决策 / 待办 / 风险」三段",
+      "difficulty": 1,
+      "hours": 2,
+      "stage": 2,
+      "stack": ["语音转写", "提示词"],
+      "payoff": "每周省 1 小时整理，且不会漏掉承诺",
+      "steps": [
+        "用飞书妙记、通义听悟或 Whisper 把录音转成文字，不要边听边记",
+        "提示词固定三段：已经决定的事、谁在什么时候做什么、还没解决的问题",
+        "每条待办必须带负责人和时间，缺了就让 AI 标「待确认」，不许自己编",
+        "会后 10 分钟内发出去，超过一小时基本没人看了"
+      ],
+      "refs": [
+        { "label": "腾讯云：录音转写 + 纪要 prompt 模板", "url": "https://developer.cloud.tencent.com/article/2650436" },
+        { "label": "知乎：用 Gemini 做录音分析（附提示词）", "url": "https://zhuanlan.zhihu.com/p/1916463762975732914" }
+      ]
+    },
+    {
+      "id": "long-doc-reading",
+      "title": "长文档速读：合同 / 说明书 / 体检报告",
+      "problem": "几十页 PDF 看不完，看完了也记不住重点",
+      "oneLiner": "分三轮读，不要一次性把全文丢进去让它总结",
+      "difficulty": 1,
+      "hours": 2,
+      "stage": 3,
+      "stack": ["文档问答", "引用核对"],
+      "payoff": "读合同从两小时到二十分钟，且不漏关键条款",
+      "steps": [
+        "第一轮只要目录级摘要，判断哪三章跟你有关，其余先跳过",
+        "第二轮逐章问「这一条对我有什么影响」，要求它引用原文",
+        "第三轮让它出「签之前要问对方的 5 个问题」",
+        "凡是数字、日期、金额，一律回原文核对，不要信二手总结"
+      ],
+      "refs": [
+        { "label": "知乎：用 NotebookLM 做私人知识库", "url": "https://zhuanlan.zhihu.com/p/1903927872172832593" },
+        { "label": "NotebookLM 官方帮助", "url": "https://support.google.com/gemininotebook/?hl=zh-Hans" }
+      ]
+    },
+    {
+      "id": "weekly-report",
+      "title": "周报 / 汇报，不再憋一小时",
+      "problem": "每周五对着空白文档憋一小时，写完自己都不想看",
+      "oneLiner": "平时记三行素材，周五让 AI 按「结果-影响-风险」重写",
+      "difficulty": 1,
+      "hours": 2,
+      "stage": 2,
+      "stack": ["素材积累", "改写"],
+      "payoff": "周报从 60 分钟到 15 分钟，而且领导看得懂",
+      "steps": [
+        "平时随手记三行：做了什么、卡在哪、下一步",
+        "周五把素材粘给 AI，要求按结果、影响、风险重排，不写过程",
+        "让它把「完成了 X」改写成「X 带来了什么变化」",
+        "事实自己核一遍，AI 很容易把「计划」写成「已完成」"
+      ],
+      "refs": [
+        { "label": "Learning Prompt", "url": "https://github.com/thinkingjimmy/Learning-Prompt" },
+        { "label": "博客园：AI 提升效率指南", "url": "https://www.cnblogs.com/gccbuaa/p/19437248" }
+      ]
+    },
+    {
+      "id": "sheet-analysis",
+      "title": "表格分析：账单与开支",
+      "problem": "想知道钱花哪了，但不会写公式也不会做透视表",
+      "oneLiner": "用大白话提问，让它给公式并解释，在副本上验证",
+      "difficulty": 1,
+      "hours": 2,
+      "stage": 2,
+      "stack": ["自然语言提问", "验证"],
+      "payoff": "每月 10 分钟看清开支结构",
+      "steps": [
+        "先把表头和前三行数据发给它，让它知道每一列是什么",
+        "用大白话问「这个月餐饮比上月多了多少」，要它给公式和操作步骤",
+        "在表格副本上跑一遍，对不上就问它哪一步错了",
+        "把常用的三个问法存成模板，下个月直接复用"
+      ],
+      "refs": [
+        { "label": "ChatExcel：有效提示词怎么写", "url": "https://chatexcel.com/blog/chatexcel-pro-prompt/" },
+        { "label": "微软官方：用 AI 创建和分析表格", "url": "https://excel.cloud.microsoft/create/zh-hans/blog/create-analyze-excel-spreadsheet-ai/" }
+      ]
+    },
+    {
+      "id": "ai-tutor",
+      "title": "AI 私教：7 天入门一个陌生领域",
+      "problem": "想学新东西不知道从哪开始，看完就忘",
+      "oneLiner": "让它当私教：出 7 天路线、每天出题、最后让你讲给它听",
+      "difficulty": 1,
+      "hours": 4,
+      "stage": 2,
+      "stack": ["费曼法", "提问框架"],
+      "payoff": "一周下来能跟人聊明白，而不是只记住几个名词",
+      "steps": [
+        "先让它出 7 天路线，每天 30 分钟，必须具体到做什么",
+        "每天学完，用费曼法讲回给它，让它指出你讲错的地方",
+        "针对讲错的部分让它出 3 道题，第二天先复习这些",
+        "第七天做一次 20 题自测，低于 80 分就重学薄弱项"
+      ],
+      "refs": [
+        { "label": "Learning Prompt", "url": "https://github.com/thinkingjimmy/Learning-Prompt" },
+        { "label": "LangGPT：把提示词写成结构化模板", "url": "https://github.com/langgptai/LangGPT" }
+      ]
+    },
+    {
+      "id": "no-code-agent",
+      "title": "零代码搭一个助手（扣子 / Coze）",
+      "problem": "每天都在做同一件重复的事，或者反复回答同样的问题",
+      "oneLiner": "在扣子里配一个只干一件事的助手，先给自己用一周",
+      "difficulty": 2,
+      "hours": 4,
+      "stage": 4,
+      "stack": ["零代码", "知识库", "工作流"],
+      "payoff": "每天省 20 分钟，而且质量比临时问更稳定",
+      "steps": [
+        "选一个高频、规则清楚的事：改文案、答 FAQ、整理表格",
+        "在扣子里写人设和固定输出格式，再喂 3-5 个示例",
+        "发布到飞书或微信，先用一周，记录哪次答得不对",
+        "答错就补一条资料进知识库，不要靠改提示词硬凑"
+      ],
+      "refs": [
+        { "label": "知乎：从零搭一个 Coze 智能体", "url": "https://zhuanlan.zhihu.com/p/1975662556375961782" },
+        { "label": "扣子官方：搭建第一个智能体", "url": "https://docs.coze.cn/guides_quickstart" },
+        { "label": "博客园：Coze 从 0 到 1 实战", "url": "https://www.cnblogs.com/tangshiye/p/19033849" }
+      ]
+    },
+    {
+      "id": "personal-kb",
+      "title": "个人知识库：资料变成能问答的库",
+      "problem": "资料存了一堆，真要用的时候一条都找不到",
+      "oneLiner": "按主题建库，只问「基于这些资料」的问题，回答必须带出处",
+      "difficulty": 1,
+      "hours": 3,
+      "stage": 3,
+      "stack": ["知识库", "引用溯源"],
+      "payoff": "查资料从翻聊天记录到 30 秒",
+      "steps": [
+        "一次只建一个主题的库，比如「装修」，别把无关资料混进去",
+        "上传 PDF、网页、录音转写，先让它生成一份总览",
+        "提问时加一句「只根据上传的资料回答，没有就说没有」",
+        "每条结论点回原文核对，尤其是数字和条款"
+      ],
+      "refs": [
+        { "label": "知乎：NotebookLM 做私人知识库", "url": "https://zhuanlan.zhihu.com/p/1903927872172832593" },
+        { "label": "NotebookLM 官方帮助", "url": "https://support.google.com/gemininotebook/?hl=zh-Hans" }
+      ]
+    },
+    {
+      "id": "info-filter",
+      "title": "每周信息筛选，只读 3 条",
+      "problem": "收藏了几百篇，一篇没看，越存越焦虑",
+      "oneLiner": "固定 3 个源，每周只让 AI 挑 3 条跟你当前项目相关的",
+      "difficulty": 2,
+      "hours": 3,
+      "stage": 4,
+      "stack": ["信息聚合", "自动化"],
+      "payoff": "每周省 3 小时，而且不再有信息焦虑",
+      "steps": [
+        "只留 3-5 个真正有用的源，其余全部取关",
+        "每周固定时间，把本周标题列表发给 AI，同时说明你最近在做什么",
+        "只要 3 条「和你当前项目直接相关」的，其余归档，不读",
+        "读完写一句「对我有什么用」，写不出来就说明本来不该读"
+      ],
+      "refs": [
+        { "label": "扣子官方：工作流快速开始", "url": "https://docs.coze.cn/guides_quickstart" },
+        { "label": "Learning Prompt", "url": "https://github.com/thinkingjimmy/Learning-Prompt" }
+      ]
+    }
+  ]
+}

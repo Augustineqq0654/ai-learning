@@ -15,6 +15,7 @@ const state = {
   completed: [],
   skipped: {},
   stage: null,
+  stagePinned: false,
   streak: { days: 0, lastActive: null },
 }
 
@@ -71,10 +72,11 @@ function loadState() {
       completed: Array.isArray(saved.completed) ? saved.completed : [],
       skipped: saved.skipped || {},
       stage: saved.stage ?? null,
+      stagePinned: saved.stagePinned === true,
       streak: { days: 0, lastActive: null, ...(saved.streak || {}) },
     }
   } catch {
-    return { completed: [], skipped: {}, stage: null, streak: { days: 0, lastActive: null } }
+    return { completed: [], skipped: {}, stage: null, stagePinned: false, streak: { days: 0, lastActive: null } }
   }
 }
 
@@ -118,8 +120,8 @@ async function boot() {
   projects = p.status === 'fulfilled' ? p.value : null
   tutorials = t.status === 'fulfilled' ? t.value : null
 
-  // 先定好当前阶段，再写 localStorage，否则会把未解析的 null 存进去
-  if (roadmap?.currentStage && state.stage == null) state.stage = roadmap.currentStage
+  // 没手动选过阶段时，跟随 roadmap 的当前阶段；手动选过就不再覆盖
+  if (roadmap?.currentStage != null && !state.stagePinned) state.stage = roadmap.currentStage
 
   touchStreak()
   renderStreak()
@@ -271,6 +273,7 @@ function renderStageSwitch() {
   box.querySelectorAll('.stage-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.stage = Number(btn.dataset.stage)
+      state.stagePinned = true
       saveState()
       renderStageSwitch()
       renderStage()

@@ -23,9 +23,11 @@ let news = null
 let roadmap = null
 let projects = null
 let tutorials = null
+let models = null
 
 let newsFilter = 'all'
 let projectFilter = 'all'
+let sceneFilter = 'all'
 
 /* --------------------------------- 工具 ---------------------------------- */
 
@@ -108,17 +110,19 @@ async function getJson(url) {
 async function boot() {
   Object.assign(state, loadState())
 
-  const [n, r, p, t] = await Promise.allSettled([
+  const [n, r, p, t, m] = await Promise.allSettled([
     getJson('/api/news'),
     getJson('/data/roadmap.json'),
     getJson('/data/projects.json'),
     getJson('/data/tutorials.json'),
+    getJson('/data/models.json'),
   ])
 
   news = n.status === 'fulfilled' ? n.value : null
   roadmap = r.status === 'fulfilled' ? r.value : null
   projects = p.status === 'fulfilled' ? p.value : null
   tutorials = t.status === 'fulfilled' ? t.value : null
+  models = m.status === 'fulfilled' ? m.value : null
 
   // 没手动选过阶段时，跟随 roadmap 的当前阶段；手动选过就不再覆盖
   if (roadmap?.currentStage != null && !state.stagePinned) state.stage = roadmap.currentStage
@@ -141,6 +145,8 @@ async function boot() {
     renderProjects()
   } else if (page === 'tutorials') {
     renderTutorials()
+  } else if (page === 'models') {
+    renderModels()
   }
 
   bindRefresh()
@@ -505,6 +511,145 @@ function renderProjects() {
       </article>`
     })
     .join('')
+}
+
+/* --------------------------------- 选型 ---------------------------------- */
+
+const GO_HEAD = `<thead><tr>
+  <th>级别</th><th>模型</th><th>价格 / 1M</th><th>月额度</th><th>最适合</th><th>备注</th>
+</tr></thead>`
+
+function sceneCard(s) {
+  const alt = s.alternative
+    ? `<div class="pick"><span class="pick-label alt">备选</span><b>${esc(s.alternative.model)}</b><span class="pick-why">${esc(s.alternative.why)}</span></div>`
+    : ''
+
+  return `
+    <article class="scene">
+      <div class="scene-head">
+        <h3>${esc(s.name)}</h3>
+        <span class="chip scene-tag">${esc(s.groupLabel)}</span>
+      </div>
+      <div class="pick"><span class="pick-label">首选</span><b>${esc(s.primary.model)}</b><span class="pick-why">${esc(s.primary.why)}</span></div>
+      ${alt}
+      <p class="scene-tip">${esc(s.tip)}</p>
+    </article>`
+}
+
+function renderSceneFilters() {
+  const box = $('#scene-filters')
+  if (!box) return
+
+  const present = new Set((models?.scenarios || []).map((s) => s.group))
+  const chips = (models?.groups || []).filter((g) => g.id === 'all' || present.has(g.id))
+
+  box.innerHTML = chips
+    .map((g) => `<button class="filter ${sceneFilter === g.id ? 'on' : ''}" data-group="${g.id}">${g.label}</button>`)
+    .join('')
+
+  box.querySelectorAll('.filter').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      sceneFilter = btn.dataset.group
+      renderSceneFilters()
+      renderScenes()
+    })
+  })
+}
+
+function renderScenes() {
+  const box = $('#scene-list')
+  if (!box) return
+
+  const all = models?.scenarios || []
+  if (!all.length) {
+    box.innerHTML = `<div class="empty">选型数据还没生成。检查 data/models.json。</div>`
+    return
+  }
+
+  const list = all.filter((s) => sceneFilter === 'all' || s.group === sceneFilter)
+  box.innerHTML = list.map(sceneCard).join('')
+}
+
+function goRows(list) {
+  return list
+    .map(
+      (m) => `
+      <tr>
+        <td><span class="tier tier-${m.tier.toLowerCase()}">${m.tier}</span></td>
+        <td class="model-name">${esc(m.name)}</td>
+        <td class="mono">${esc(m.price)}</td>
+        <td class="mono quota">${esc(m.quota)}</td>
+        <td>${esc(m.best)}</td>
+        <td class="muted-cell">${esc(m.note)}</td>
+      </tr>`
+    )
+    .join('')
+}
+
+function renderModels() {
+  const meta = $('#models-meta')
+  if (meta) {
+    meta.textContent = models
+      ? `数据截至 ${models.statsThrough} · ${models.scenarios.length} 个场景 · Go 订阅 ${models.goModels.length} 个模型`
+      : '选型数据没加载出来'
+  }
+
+  const note = $('#models-note')
+  if (note) {
+    const lines = models?.conclusion || []
+    note.hidden = !lines.length
+    note.innerHTML = lines
+      .map((line, i) => `<div class="conclusion"><span class="conclusion-idx">${i + 1}</span><span>${esc(line)}</span></div>`)
+      .join('')
+  }
+
+  if (models?.note) {
+    const source = $('#models-source')
+    if (source) source.textContent = models.note
+  }
+
+  renderSceneFilters()
+  renderScenes()
+
+  const goTable = $('#go-table')
+  if (goTable && models) {
+    const main = models.goModels.filter((m) => m.tier !== 'B')
+    const rest = models.goModels.filter((m) => m.tier === 'B')
+
+    goTable.innerHTML = `${GO_HEAD}<tbody>${goRows(main)}</tbody>`
+
+    const more = $('#go-more')
+    const tableB = $('#go-table-b')
+    if (more) {
+      more.hidden = !rest.length
+      const summary = more.querySelector('summary')
+      if (summary) summary.textContent = `B 级 / 专项与免费额度（${rest.length} 个）`
+    }
+    if (tableB) tableB.innerHTML = `${GO_HEAD}<tbody>${goRows(rest)}</tbody>`
+  }
+
+  const marketTable = $('#market-table')
+  if (marketTable && models) {
+    marketTable.innerHTML = `
+      <thead><tr><th>#</th><th>模型</th><th>周用量</th><th>占前十</th><th>大家拿它干什么</th></tr></thead>
+      <tbody>${(models.market || [])
+        .map(
+          (m) => `
+        <tr>
+          <td class="rank">${m.rank}</td>
+          <td class="model-name">${esc(m.name)}<span class="vendor">${esc(m.vendor)}</span></td>
+          <td class="mono">${esc(m.weekly)}</td>
+          <td class="share"><span class="share-bar"><span style="width:${m.share}%"></span></span><span class="share-num">${m.share}%</span></td>
+          <td>${esc(m.best)}</td>
+        </tr>`
+        )
+        .join('')}</tbody>`
+  }
+
+  const tips = $('#tips-list')
+  if (tips && models) {
+    tips.innerHTML = (models.tips || []).map((t) => `<li>${esc(t)}</li>`).join('')
+  }
 }
 
 /* --------------------------------- 更新 ---------------------------------- */

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>选型 · AI 学习驾驶舱</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body data-page="models">
+    <nav class="nav">
+      <div class="nav-inner">
+        <a class="nav-brand" href="/">AI 学习驾驶舱</a>
+        <div class="nav-links">
+          <a class="nav-link" href="/">速览</a>
+          <a class="nav-link" href="/study.html">学习</a>
+          <a class="nav-link" href="/projects.html">项目库</a>
+          <a class="nav-link" href="/tutorials.html">教程</a>
+          <a class="nav-link active" href="/models.html">选型</a>
+        </div>
+        <div class="nav-actions">
+          <span class="streak" id="streak" hidden></span>
+          <button class="btn btn-sm" id="refresh">更新</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="page-head">
+        <h1>模型选型</h1>
+        <p class="sub" id="models-meta">按场景选，不按榜单选</p>
+      </header>
+
+      <div class="notice notice-accent" id="models-note" hidden></div>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>场景速查</h2>
+          <span class="hint">先定场景，再挑模型</span>
+        </div>
+        <div class="filters" id="scene-filters"></div>
+        <div class="scenes" id="scene-list"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>OpenCode Go 常用模型</h2>
+          <span class="hint">$10/月 · 额度按模型单独算</span>
+        </div>
+        <div class="table-wrap">
+          <table class="model-table" id="go-table"></table>
+        </div>
+        <details class="more-models" id="go-more" hidden>
+          <summary>B 级 / 专项与免费额度</summary>
+          <div class="table-wrap">
+            <table class="model-table" id="go-table-b"></table>
+          </div>
+        </details>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>市面用量 Top 10</h2>
+          <span class="hint">OpenRouter · 截至 11-09 周</span>
+        </div>
+        <div class="table-wrap">
+          <table class="model-table" id="market-table"></table>
+        </div>
+        <p class="fineprint">DeepSeek V4.1 Flash 两个版本合计占前十约 54%；前十里有 7 个是开放权重模型。用量不等于能力，只说明大家拿它干什么。</p>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>省钱三条</h2>
+          <span class="hint">同样效果，少花一半</span>
+        </div>
+        <ol class="tips" id="tips-list"></ol>
+      </section>
+
+      <footer class="foot">
+        <span id="models-source">数据口径：OpenRouter 周榜 · Artificial Analysis Index v5 · 官方定价</span>
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+    <script src="/app.js"></script>
+  </body>
+</html>

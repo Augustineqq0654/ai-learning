@@ -1,20 +1,41 @@
 {
-  "updatedAt": "2026-11-10",
+  "updatedAt": "2026-11-13",
   "statsThrough": "2026-11-09",
-  "note": "用量为 OpenRouter 周榜（截至 11-09），质量分为 Artificial Analysis Intelligence Index v5（10-27），价格为官方牌价 USD/百万 token。Go 没有公开的分模型用量榜，常用度按同款模型的公开用量与额度设计推断。",
+  "note": "用量榜名次来自 OpenRouter 周榜（自动更新），价格为 OpenRouter 挂牌价 USD/百万 token（自动更新）；额度、场景推荐、用途说明为人工维护。用量数字为上次人工核对值，新上榜模型会显示 —。",
   "conclusion": [
     "90% 的活交给 DeepSeek V4.1 Flash：编码实测 80 分、一个长会话 $0.14，Go 里月额度 $100。",
     "难题再切 Kimi K3.1 Pro 或 GLM 5.3；规划确认后立刻切回便宜模型执行。",
     "多模态用 Gemini 4 Argon，长文用 MiniMax M3（512K），实时热点用 Grok 4.7。"
   ],
   "groups": [
-    { "id": "all", "label": "全部" },
-    { "id": "code", "label": "编码" },
-    { "id": "context", "label": "长文" },
-    { "id": "vision", "label": "视觉" },
-    { "id": "writing", "label": "写作" },
-    { "id": "realtime", "label": "实时" },
-    { "id": "free", "label": "兜底" }
+    {
+      "id": "all",
+      "label": "全部"
+    },
+    {
+      "id": "code",
+      "label": "编码"
+    },
+    {
+      "id": "context",
+      "label": "长文"
+    },
+    {
+      "id": "vision",
+      "label": "视觉"
+    },
+    {
+      "id": "writing",
+      "label": "写作"
+    },
+    {
+      "id": "realtime",
+      "label": "实时"
+    },
+    {
+      "id": "free",
+      "label": "兜底"
+    }
   ],
   "scenarios": [
     {
@@ -22,8 +43,14 @@
       "group": "code",
       "groupLabel": "编码",
       "name": "日常写代码、改 bug",
-      "primary": { "model": "DeepSeek V4.1 Flash", "why": "80 分、$0.14 一个长会话，额度 $100 够造" },
-      "alternative": { "model": "GLM 5.3 Flash", "why": "短问题 83 分，响应更快" },
+      "primary": {
+        "model": "DeepSeek V4.1 Flash",
+        "why": "80 分、$0.14 一个长会话，额度 $100 够造"
+      },
+      "alternative": {
+        "model": "GLM 5.3 Flash",
+        "why": "短问题 83 分，响应更快"
+      },
       "tip": "默认模型就设它，思考档 high；改错别字、格式化再降到 low。"
     },
     {
@@ -31,8 +58,14 @@
       "group": "code",
       "groupLabel": "编码",
       "name": "复杂重构、架构设计",
-      "primary": { "model": "Kimi K3.1 Pro", "why": "开源里最聪明，诊断和规划明显更强" },
-      "alternative": { "model": "GLM 5.3", "why": "长会话 71%，比 Kimi 便宜近一半" },
+      "primary": {
+        "model": "Kimi K3.1 Pro",
+        "why": "开源里最聪明，诊断和规划明显更强"
+      },
+      "alternative": {
+        "model": "GLM 5.3",
+        "why": "长会话 71%，比 Kimi 便宜近一半"
+      },
       "tip": "只在难题切。K3.1 Pro 一个长会话能写 98K 输出 token，慢且贵。"
     },
     {
@@ -40,8 +73,14 @@
       "group": "code",
       "groupLabel": "编码",
       "name": "先规划再动手",
-      "primary": { "model": "Kimi K3.1 Pro", "why": "拆任务、找隐藏依赖最稳" },
-      "alternative": { "model": "Qwen3.8 Max", "why": "中文需求理解好，指数 53.4" },
+      "primary": {
+        "model": "Kimi K3.1 Pro",
+        "why": "拆任务、找隐藏依赖最稳"
+      },
+      "alternative": {
+        "model": "Qwen3.8 Max",
+        "why": "中文需求理解好，指数 53.4"
+      },
       "tip": "plan 模式确认方案后切回 DeepSeek 执行，别让贵模型干体力活。"
     },
     {
@@ -49,8 +88,14 @@
       "group": "code",
       "groupLabel": "编码",
       "name": "批量改文件、跑 CI",
-      "primary": { "model": "DeepSeek V4.1 Flash", "why": "每任务成本最低，失败可重试不心疼" },
-      "alternative": { "model": "MiMo V2.6 Flash", "why": "$0.14 / $0.28，日用量一周涨 112%" },
+      "primary": {
+        "model": "DeepSeek V4.1 Flash",
+        "why": "每任务成本最低，失败可重试不心疼"
+      },
+      "alternative": {
+        "model": "MiMo V2.6 Flash",
+        "why": "$0.14 / $0.28，日用量一周涨 112%"
+      },
       "tip": "按目录分批跑，关掉多余思考，日志留好方便回滚。"
     },
     {
@@ -58,8 +103,14 @@
       "group": "context",
       "groupLabel": "长文",
       "name": "读整个仓库、长文档",
-      "primary": { "model": "MiniMax M3", "why": "512K 上下文，一次装下整个模块" },
-      "alternative": { "model": "Qwen3.7 Plus", "why": "256K，价格只有 M3 的一半" },
+      "primary": {
+        "model": "MiniMax M3",
+        "why": "512K 上下文，一次装下整个模块"
+      },
+      "alternative": {
+        "model": "Qwen3.7 Plus",
+        "why": "256K，价格只有 M3 的一半"
+      },
       "tip": "注意 256K / 512K 的计费跳档，先裁掉无关文件再喂。"
     },
     {
@@ -67,8 +118,14 @@
       "group": "vision",
       "groupLabel": "视觉",
       "name": "前端、UI 还原",
-      "primary": { "model": "Claude Haiku 5.5", "why": "Anthropic 的界面审美，组件代码干净" },
-      "alternative": { "model": "Gemini 4 Argon", "why": "看得懂设计稿，5 折后不贵" },
+      "primary": {
+        "model": "Claude Haiku 5.5",
+        "why": "Anthropic 的界面审美，组件代码干净"
+      },
+      "alternative": {
+        "model": "Gemini 4 Argon",
+        "why": "看得懂设计稿，5 折后不贵"
+      },
       "tip": "截图 + 现有组件代码 + 一句风格要求，三件套一起给。"
     },
     {
@@ -76,8 +133,14 @@
       "group": "vision",
       "groupLabel": "视觉",
       "name": "看报错截图、设计稿",
-      "primary": { "model": "Gemini 4 Argon", "why": "多模态最强，Arena 文本榜也第一" },
-      "alternative": { "model": "Claude Haiku 5.5", "why": "读代码截图够用，便宜" },
+      "primary": {
+        "model": "Gemini 4 Argon",
+        "why": "多模态最强，Arena 文本榜也第一"
+      },
+      "alternative": {
+        "model": "Claude Haiku 5.5",
+        "why": "读代码截图够用，便宜"
+      },
       "tip": "把「期望结果」一并写进提示词，比只发截图准得多。"
     },
     {
@@ -85,8 +148,14 @@
       "group": "writing",
       "groupLabel": "写作",
       "name": "中文写作、文案、汇报",
-      "primary": { "model": "Qwen3.8 Max", "why": "中文语感最稳，长文不散" },
-      "alternative": { "model": "GLM 5.3", "why": "更便宜，短文案够用" },
+      "primary": {
+        "model": "Qwen3.8 Max",
+        "why": "中文语感最稳，长文不散"
+      },
+      "alternative": {
+        "model": "GLM 5.3",
+        "why": "更便宜，短文案够用"
+      },
       "tip": "长文用 Max，标题和短文案用 Flash，成本差三倍。"
     },
     {
@@ -94,8 +163,14 @@
       "group": "writing",
       "groupLabel": "写作",
       "name": "英文写作、润色",
-      "primary": { "model": "Claude Haiku 5.5", "why": "句式和语气最接近母语编辑" },
-      "alternative": { "model": "GPT 6 Luna", "why": "$0.10 / $0.50，批量改写首选" },
+      "primary": {
+        "model": "Claude Haiku 5.5",
+        "why": "句式和语气最接近母语编辑"
+      },
+      "alternative": {
+        "model": "GPT 6 Luna",
+        "why": "$0.10 / $0.50，批量改写首选"
+      },
       "tip": "润色时给「目标读者 + 语气 + 长度」，别只说 improve。"
     },
     {
@@ -103,7 +178,10 @@
       "group": "realtime",
       "groupLabel": "实时",
       "name": "查实时信息、追热点",
-      "primary": { "model": "Grok 4.7", "why": "Go 里唯一带原生 X 数据的模型" },
+      "primary": {
+        "model": "Grok 4.7",
+        "why": "Go 里唯一带原生 X 数据的模型"
+      },
       "alternative": null,
       "tip": "热点、舆情、新品发布优先用它；严肃事实仍要回原链接核对。"
     },
@@ -112,8 +190,14 @@
       "group": "code",
       "groupLabel": "编码",
       "name": "终端命令、自动化脚本",
-      "primary": { "model": "Step 5 Preview", "why": "工具调用型，周用量 7.15T" },
-      "alternative": { "model": "Kimi K2.7 Code", "why": "专用编码模型，适合长跑" },
+      "primary": {
+        "model": "Step 5 Preview",
+        "why": "工具调用型，周用量 7.15T"
+      },
+      "alternative": {
+        "model": "Kimi K2.7 Code",
+        "why": "专用编码模型，适合长跑"
+      },
       "tip": "让它先输出命令再执行，危险操作加确认，别直接放权。"
     },
     {
@@ -121,32 +205,56 @@
       "group": "free",
       "groupLabel": "兜底",
       "name": "零成本试用、额度用完",
-      "primary": { "model": "Beam Free", "why": "完全免费，额度不限" },
-      "alternative": { "model": "LongCat 2.5 Free", "why": "同免费，但需在设置里开 Global" },
+      "primary": {
+        "model": "Beam Free",
+        "why": "完全免费，额度不限"
+      },
+      "alternative": {
+        "model": "LongCat 2.5 Free",
+        "why": "同免费，但需在设置里开 Global"
+      },
       "tip": "免费模型限时、限区，重要任务别押在它们身上。"
     }
   ],
   "goTiers": [
-    { "id": "S", "label": "S 级 · 主力走量", "note": "用量最大、额度最高" },
-    { "id": "A", "label": "A 级 · 高频备用", "note": "专项能力强或价格极低" },
-    { "id": "B", "label": "B 级 · 专项与免费", "note": "特定场景或限时额度" }
+    {
+      "id": "S",
+      "label": "S 级 · 主力走量",
+      "note": "用量最大、额度最高"
+    },
+    {
+      "id": "A",
+      "label": "A 级 · 高频备用",
+      "note": "专项能力强或价格极低"
+    },
+    {
+      "id": "B",
+      "label": "B 级 · 专项与免费",
+      "note": "特定场景或限时额度"
+    }
   ],
   "goModels": [
     {
       "tier": "S",
       "name": "DeepSeek V4.1 Flash",
-      "price": "$0.15 / $0.60",
+      "price": "$0.30 / $1.20",
       "quota": "$100",
       "best": "默认主力：日常编码、长 Agent 会话",
-      "note": "低峰价，高峰翻倍"
+      "note": "低峰价，高峰翻倍",
+      "orId": "deepseek/deepseek-v4.1-flash",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "S",
       "name": "GLM 5.3 Flash",
-      "price": "$0.15 / $0.50",
+      "price": "$0.04 / $0.08",
       "quota": "$60",
       "best": "快速改码、短问答、子 Agent",
-      "note": "短问题 83 分"
+      "note": "短问题 83 分",
+      "orId": "z-ai/glm-5.3-flash",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "S",
@@ -154,15 +262,21 @@
       "price": "$0.10 / $0.50",
       "quota": "$15",
       "best": "通用对话、工具调用、批量任务",
-      "note": "便宜得不像 GPT-6"
+      "note": "便宜得不像 GPT-6",
+      "orId": "openai/gpt-6-luna",
+      "priceSource": "OpenRouter",
+      "ctx": 1050000
     },
     {
       "tier": "S",
       "name": "Hy4",
-      "price": "$0.834 / $2.50",
+      "price": "$0.42 / $1.25",
       "quota": "$60",
       "best": "中文通用、Agent、复杂对话",
-      "note": "新模型，周用量第三"
+      "note": "新模型，周用量第三",
+      "orId": "tencent/hy4",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "S",
@@ -170,7 +284,10 @@
       "price": "$1.00 / $2.70",
       "quota": "$15",
       "best": "终端、自动化、工具链",
-      "note": "本周用量 +11%"
+      "note": "本周用量 +11%",
+      "orId": "stepfun/step-5-preview",
+      "priceSource": "OpenRouter",
+      "ctx": 1000000
     },
     {
       "tier": "S",
@@ -178,7 +295,10 @@
       "price": "$0.15 / $0.60",
       "quota": "$20",
       "best": "长上下文 Agent、大仓库",
-      "note": "周用量 4.66T"
+      "note": "周用量 4.66T",
+      "orId": "minimax/minimax-m3.1-flash",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "S",
@@ -186,7 +306,10 @@
       "price": "$2.00 / $10.00",
       "quota": "$15",
       "best": "高难度诊断、方案规划",
-      "note": "慢，单会话约 98K 输出"
+      "note": "慢，单会话约 98K 输出",
+      "orId": "moonshotai/kimi-k3.1-pro",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "A",
@@ -194,7 +317,10 @@
       "price": "$0.14 / $0.28",
       "quota": "$60",
       "best": "每任务成本最低，批量跑量",
-      "note": "日用量一周 +112%"
+      "note": "日用量一周 +112%",
+      "orId": "xiaomi/mimo-v2.6-flash",
+      "priceSource": "OpenRouter",
+      "ctx": 1050000
     },
     {
       "tier": "A",
@@ -202,15 +328,21 @@
       "price": "$0.15 / $0.47",
       "quota": "$30",
       "best": "中文、多语言、轻量任务",
-      "note": "Qwen 生态"
+      "note": "Qwen 生态",
+      "orId": "qwen/qwen3.8-flash",
+      "priceSource": "OpenRouter",
+      "ctx": 1000000
     },
     {
       "tier": "A",
       "name": "GLM 5.3",
-      "price": "$1.40 / $4.40",
+      "price": "$0.08 / $3.60",
       "quota": "$15",
       "best": "非 DeepSeek 的最佳编码备选",
-      "note": "长会话 71%"
+      "note": "长会话 71%",
+      "orId": "z-ai/glm-5.3",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "A",
@@ -218,7 +350,10 @@
       "price": "$0.10 / $0.50",
       "quota": "$15",
       "best": "前端、写作、小改动",
-      "note": "超 100K 价格 ×5"
+      "note": "超 100K 价格 ×5",
+      "orId": "anthropic/claude-haiku-5.5",
+      "priceSource": "OpenRouter",
+      "ctx": 1000000
     },
     {
       "tier": "A",
@@ -226,7 +361,10 @@
       "price": "$2.00 / $10.00",
       "quota": "$30",
       "best": "截图、多模态、超长文档",
-      "note": "当前 5 折"
+      "note": "当前 5 折",
+      "orId": "google/gemini-4-argon",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "A",
@@ -239,10 +377,13 @@
     {
       "tier": "A",
       "name": "Kimi K2.7 Code",
-      "price": "$0.95 / $4.00",
+      "price": "$0.60 / $3.50",
       "quota": "$60",
       "best": "专用编码，适合长跑",
-      "note": "代码专精"
+      "note": "代码专精",
+      "orId": "moonshotai/kimi-k2.7-code",
+      "priceSource": "OpenRouter",
+      "ctx": 262144
     },
     {
       "tier": "A",
@@ -250,7 +391,10 @@
       "price": "$0.30 / $1.20",
       "quota": "$60",
       "best": "便宜的通用兜底",
-      "note": "缓存读取极低"
+      "note": "缓存读取极低",
+      "orId": "meituan/longcat-2.0",
+      "priceSource": "OpenRouter",
+      "ctx": 1048756
     },
     {
       "tier": "B",
@@ -266,7 +410,10 @@
       "price": "$2.00 / $6.00",
       "quota": "$15",
       "best": "实时信息、创意、少审查",
-      "note": "仅此一家"
+      "note": "仅此一家",
+      "orId": "x-ai/grok-4.7",
+      "priceSource": "OpenRouter",
+      "ctx": 500000
     },
     {
       "tier": "B",
@@ -274,47 +421,65 @@
       "price": "$0.30 / $1.20",
       "quota": "$60",
       "best": "512K 超长上下文",
-      "note": "超 512K 翻倍"
+      "note": "超 512K 翻倍",
+      "orId": "minimax/minimax-m3",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "B",
       "name": "Qwen3.7 Plus",
-      "price": "$0.40 / $1.60",
+      "price": "$0.32 / $1.28",
       "quota": "$60",
       "best": "256K 长文性价比",
-      "note": "超 256K 跳档"
+      "note": "超 256K 跳档",
+      "orId": "qwen/qwen3.7-plus",
+      "priceSource": "OpenRouter",
+      "ctx": 1000000
     },
     {
       "tier": "B",
       "name": "Kimi K3",
-      "price": "$3.00 / $15.00",
+      "price": "$0.19 / $16.00",
       "quota": "$15",
       "best": "上一代旗舰",
-      "note": "性价比低于 3.1 Pro"
+      "note": "性价比低于 3.1 Pro",
+      "orId": "moonshotai/kimi-k3",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "B",
       "name": "MiMo V2.6 Pro",
-      "price": "$0.435 / $0.87",
+      "price": "$0.43 / $0.87",
       "quota": "$15",
       "best": "小米高端，成本极低",
-      "note": "每任务最便宜"
+      "note": "每任务最便宜",
+      "orId": "xiaomi/mimo-v2.6-pro",
+      "priceSource": "OpenRouter",
+      "ctx": 1050000
     },
     {
       "tier": "B",
       "name": "Muse Spark 1.3",
-      "price": "$0.10 / $0.20",
+      "price": "$1.25 / $4.25",
       "quota": "$60",
       "best": "极便宜，Meta 系",
-      "note": "需允许训练数据"
+      "note": "需允许训练数据",
+      "orId": "meta/muse-spark-1.3",
+      "priceSource": "OpenRouter",
+      "ctx": 1048576
     },
     {
       "tier": "B",
       "name": "Hy3",
-      "price": "$0.14 / $0.58",
+      "price": "$0.13 / $0.53",
       "quota": "$60",
       "best": "老款走量",
-      "note": "Hy4 的前代"
+      "note": "Hy4 的前代",
+      "orId": "tencent/hy3",
+      "priceSource": "OpenRouter",
+      "ctx": 262144
     },
     {
       "tier": "B",
@@ -350,20 +515,113 @@
     }
   ],
   "market": [
-    { "rank": 1, "name": "DeepSeek V4.1 Flash 1017", "vendor": "DeepSeek", "weekly": "55.4T", "share": 40.7, "best": "编码 Agent、批量、CI" },
-    { "rank": 2, "name": "DeepSeek V4.1 Flash", "vendor": "DeepSeek", "weekly": "17.5T", "share": 12.9, "best": "同上，稳定版" },
-    { "rank": 3, "name": "Hy4", "vendor": "腾讯", "weekly": "16.0T", "share": 11.8, "best": "中文通用、Agent" },
-    { "rank": 4, "name": "GLM 5.3 Flash", "vendor": "Z.ai", "weekly": "12.1T", "share": 8.9, "best": "日常改码、短问答" },
-    { "rank": 5, "name": "Step 5 Preview", "vendor": "StepFun", "weekly": "7.15T", "share": 5.3, "best": "终端、自动化、工具链" },
-    { "rank": 6, "name": "GPT-6 Luna", "vendor": "OpenAI", "weekly": "7.1T", "share": 5.2, "best": "通用对话、工具调用" },
-    { "rank": 7, "name": "Claude Opus 5.5", "vendor": "Anthropic", "weekly": "6.75T", "share": 5.0, "best": "复杂重构、代码审查" },
-    { "rank": 8, "name": "Crouton Alpha", "vendor": "stealth", "weekly": "5.1T", "share": 3.7, "best": "尝鲜、匿名模型" },
-    { "rank": 9, "name": "MiniMax M3.1 Flash", "vendor": "MiniMax", "weekly": "4.66T", "share": 3.4, "best": "长上下文 Agent" },
-    { "rank": 10, "name": "Kimi K3.1 Pro", "vendor": "Moonshot", "weekly": "4.39T", "share": 3.2, "best": "深度诊断、方案规划" }
+    {
+      "rank": 1,
+      "name": "DeepSeek V4.1 Flash 1017",
+      "vendor": "DeepSeek",
+      "orId": "deepseek/deepseek-v4.1-flash-1017",
+      "weekly": "55.4T",
+      "share": 40.7,
+      "best": "编码 Agent、批量、CI"
+    },
+    {
+      "rank": 2,
+      "name": "Hy4",
+      "vendor": "腾讯",
+      "orId": "tencent/hy4",
+      "weekly": "16.0T",
+      "share": 11.8,
+      "best": "中文通用、Agent"
+    },
+    {
+      "rank": 3,
+      "name": "DeepSeek V4.1 Flash",
+      "vendor": "DeepSeek",
+      "orId": "deepseek/deepseek-v4.1-flash",
+      "weekly": "17.5T",
+      "share": 12.9,
+      "best": "同上，稳定版"
+    },
+    {
+      "rank": 4,
+      "name": "GLM 5.3 Flash",
+      "vendor": "Z.ai",
+      "orId": "z-ai/glm-5.3-flash",
+      "weekly": "12.1T",
+      "share": 8.9,
+      "best": "日常改码、短问答"
+    },
+    {
+      "rank": 5,
+      "name": "GPT-6 Luna",
+      "vendor": "OpenAI",
+      "orId": "openai/gpt-6-luna",
+      "weekly": "7.1T",
+      "share": 5.2,
+      "best": "通用对话、工具调用"
+    },
+    {
+      "rank": 6,
+      "name": "Claude Opus 5.5",
+      "vendor": "Anthropic",
+      "orId": "anthropic/claude-opus-5.5",
+      "weekly": "6.75T",
+      "share": 5,
+      "best": "复杂重构、代码审查"
+    },
+    {
+      "rank": 7,
+      "name": "Step 5 Preview",
+      "vendor": "StepFun",
+      "orId": "stepfun/step-5-preview",
+      "weekly": "7.15T",
+      "share": 5.3,
+      "best": "终端、自动化、工具链"
+    },
+    {
+      "rank": 8,
+      "name": "Kimi K3.1 Pro",
+      "vendor": "Moonshot",
+      "orId": "moonshotai/kimi-k3.1-pro",
+      "weekly": "4.39T",
+      "share": 3.2,
+      "best": "深度诊断、方案规划"
+    },
+    {
+      "rank": 9,
+      "name": "GPT-6.1 Sol",
+      "vendor": "OpenAI",
+      "orId": "openai/gpt-6.1-sol",
+      "weekly": null,
+      "share": null,
+      "best": ""
+    },
+    {
+      "rank": 10,
+      "name": "GLM 5.3",
+      "vendor": "Z.ai",
+      "orId": "z-ai/glm-5.3",
+      "weekly": null,
+      "share": null,
+      "best": ""
+    }
   ],
   "tips": [
     "双模型配置：规划用 Kimi K3.1 Pro 或 GLM 5.3，执行用 DeepSeek V4.1 Flash。Go 额度按模型分别计，别让贵模型干体力活。",
     "用 variant 控制思考深度：格式化用 low，debug 用 high，别一路 max 烧 token。",
     "错峰使用：DeepSeek 低峰价是高峰的一半，批量任务挪到低峰跑。"
-  ]
+  ],
+  "priceUpdatedAt": "2026-11-13",
+  "priceMatched": 21,
+  "priceMissed": [
+    "DeepSeek V4 Pro",
+    "Qwen3.8 Max",
+    "Beam Free",
+    "Iceman Contributor Free",
+    "LongCat 2.5 Free",
+    "Crouton Alpha"
+  ],
+  "rankUpdatedAt": "2026-11-13",
+  "rankThrough": "2026-11-12",
+  "lastAttemptAt": "2026-11-13T11:35:05.687Z"
 }

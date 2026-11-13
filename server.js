@@ -59,28 +59,49 @@ function safeJoin(base, requestPath) {
   return full.startsWith(base) ? full : null
 }
 
+const SCRIPTS = ['fetch-data.js', 'fetch-models.js']
+
+function runScript(script) {
+  return new Promise((resolve) => {
+    execFile(
+      process.execPath,
+      [path.join(ROOT, script)],
+      { cwd: ROOT, timeout: 120000, windowsHide: true, maxBuffer: 1024 * 1024 * 4 },
+      (err, stdout, stderr) => {
+        resolve({
+          script,
+          ok: !err,
+          stdout: stdout || '',
+          stderr: stderr || '',
+          error: err ? String(err.message) : null,
+        })
+      }
+    )
+  })
+}
+
 async function handleRefresh(res) {
   if (refreshing) {
     sendJson(res, 202, { ok: true, running: true })
     return
   }
 
-  refreshing = new Promise((resolve) => {
-    execFile(
-      process.execPath,
-      ['--use-env-proxy', path.join(ROOT, 'fetch-data.js')],
-      { cwd: ROOT, timeout: 120000, windowsHide: true, maxBuffer: 1024 * 1024 * 4 },
-      (err, stdout, stderr) => {
-        refreshing = null
-        resolve({ ok: !err, stdout, stderr, error: err ? String(err.message) : null })
-      }
-    )
-  })
+  refreshing = Promise.all(SCRIPTS.map((script) => runScript(script)))
 
-  const result = await refreshing
-  console.log(result.stdout?.trim() || '')
-  if (!result.ok) console.error(result.stderr?.trim() || result.error)
-  sendJson(res, result.ok ? 200 : 500, result)
+  let results = []
+  try {
+    results = await refreshing
+  } finally {
+    refreshing = null
+  }
+
+  for (const r of results) {
+    if (r.stdout.trim()) console.log(r.stdout.trim())
+    if (!r.ok) console.error(r.stderr.trim() || r.error)
+  }
+
+  const ok = results.some((r) => r.ok)
+  sendJson(res, ok ? 200 : 500, { ok, results })
 }
 
 const server = http.createServer(async (req, res) => {

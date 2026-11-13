@@ -2,89 +2,24 @@
  * fetch-data.js
  * 抓取 → 规范化 → 去重 → 分类 → 打分 → 写 data/news.json
  *
- * 零依赖，只用 Node 内置模块。
- * 代理：npm run update 已带 --use-env-proxy，会读 HTTP_PROXY / HTTPS_PROXY / NO_PROXY。
+ * 网络层统一走 lib/net.js（代理发现、超时、重试）。
  */
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import crypto from 'node:crypto'
-import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { fetch as ufetch, ProxyAgent } from 'undici'
+import { createDispatcher, fetchText } from './lib/net.js'
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = path.join(ROOT, 'data')
 
-const UA =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-
 /** 全局 dispatcher：有代理走代理，没代理直连 */
 let dispatcher = undefined
 
-function normalizeProxy(raw) {
-  const first = String(raw || '').split(';').map((s) => s.trim()).filter(Boolean)[0]
-  if (!first) return null
-  const value = first.includes('=') ? first.split('=').pop().trim() : first
-  if (!value) return null
-  return /^https?:\/\//i.test(value) ? value : `http://${value}`
-}
-
-/**
- * 代理发现顺序：sources.json 里的 proxy → 环境变量 → Windows 系统代理设置
- * 国内网络下 Node 默认不走系统代理，这里把它读出来，否则 GitHub / HN 直连会超时。
- */
-function detectProxy(configured) {
-  if (configured) return normalizeProxy(configured)
-
-  const env = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy
-  if (env) return normalizeProxy(env)
-
-  if (process.platform === 'win32') {
-    try {
-      const out = execFileSync(
-        'reg',
-        ['query', 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings'],
-        { encoding: 'utf8', windowsHide: true, timeout: 4000 }
-      )
-      if (!/ProxyEnable\s+REG_DWORD\s+0x1/i.test(out)) return null
-      const m = out.match(/ProxyServer\s+REG_SZ\s+([^\r\n]+)/i)
-      return m ? normalizeProxy(m[1]) : null
-    } catch {
-      return null
-    }
-  }
-  return null
-}
-
 /* ---------------------------------- 抓取 --------------------------------- */
 
-async function get(url, timeoutMs, retries = 1) {
-  if (!url) throw new Error('empty url')
-  let lastError
-  for (let i = 0; i <= retries; i++) {
-    try {
-      const res = await ufetch(url, {
-        headers: {
-          'user-agent': UA,
-          accept: '*/*',
-          'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
-        },
-        dispatcher,
-        signal: AbortSignal.timeout(timeoutMs),
-      })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      return await res.text()
-    } catch (err) {
-      lastError = err
-      if (i < retries) await sleep(600)
-    }
-  }
-  throw lastError
-}
-
+const get = (url, timeoutMs, retries = 1) => fetchText(url, { dispatcher, timeoutMs, retries })
 async function mapLimit(list, limit, fn) {
   const out = new Array(list.length)
   let next = 0
@@ -410,22 +345,27 @@ function wordSet(s) {
   return new Set(String(s || '').toLowerCase().match(/[a-z0-9]{2,}/g) || [])
 }
 
-function similar(a, b) {
-  const ka = titleKey(a)
-  const kb = titleKey(b)
+/**
+ * 相似度：入参是已经预计算好 key / grams / words 的条目。
+ * 每次比较都重建 bigram 会让聚类退化成 O(n²) 次字符串处理。
+ */
+function similarPrepared(a, b) {
+  const ka = a.key
+  const kb = b.key
   if (!ka || !kb) return 0
   if (ka === kb) return 1
 
-  const A = bigrams(ka)
-  const B = bigrams(kb)
+  // 长度差太大不可能是同一件事，先挡掉大部分比较
+  if (Math.min(ka.length, kb.length) / Math.max(ka.length, kb.length) < 0.35) return 0
+
+  const A = a.grams
+  const B = b.grams
   let inter = 0
   for (const x of A) if (B.has(x)) inter++
 
   const charScore = inter / (A.size + B.size - inter || 1)
-  const wordScore = jaccard(wordSet(a), wordSet(b))
+  const wordScore = jaccard(a.words, b.words)
 
-  // 包含度：短标题基本被长标题覆盖，说明是同一件事的不同措辞
-  // （例：「阿里千问办公2.0发布，支持多人与Agent协作」vs「千问办公2.0发布，首个支持…Team Agent来了」）
   const containment = inter / (Math.min(A.size, B.size) || 1)
   const containScore = Math.min(ka.length, kb.length) >= 6 && containment >= 0.72 ? containment : 0
 
@@ -475,18 +415,26 @@ async function fetchSource(src, cfg) {
 }
 
 function buildItems(items, currentStage, now, maxAgeHours = 96, maxItems = 8) {
-  // 1. 规范化
+  const maxAge = maxAgeHours * 3600 * 1000
+
+  // 1. 先按时间过滤再聚类：OpenAI 这类源会返回整个历史库（1000+ 条），
+  //    不先筛掉旧数据，聚类就是上百万次比较。
+  const fresh = []
   for (const item of items) {
+    if (item.publishedAt && now - new Date(item.publishedAt).getTime() >= maxAge) continue
     item.urlKey = normalizeUrl(item.url)
-    item.titleKeyValue = titleKey(item.title)
+    item.key = titleKey(item.title)
+    item.grams = bigrams(item.key)
+    item.words = wordSet(item.title)
+    fresh.push(item)
   }
 
-  // 2. 聚类去重
+  // 2. 聚类去重（相似度用预计算好的 bigram 集，避免每次重建）
   const clusters = []
-  for (const item of items) {
+  for (const item of fresh) {
     let target = null
     for (const c of clusters) {
-      if (c.some((m) => m.urlKey === item.urlKey || similar(m.title, item.title) > 0.6)) {
+      if (c.some((m) => m.urlKey === item.urlKey || similarPrepared(m, item) > 0.6)) {
         target = c
         break
       }
@@ -542,11 +490,8 @@ function buildItems(items, currentStage, now, maxAgeHours = 96, maxItems = 8) {
     }
   })
 
-  // 4. 过滤 + 排序
-  const maxAge = maxAgeHours * 3600 * 1000
-  const sorted = merged
-    .filter((item) => !item.publishedAt || now - new Date(item.publishedAt).getTime() < maxAge)
-    .sort((a, b) => b.score - a.score)
+  // 4. 排序（时间过滤已在第 1 步做完）
+  const sorted = merged.sort((a, b) => b.score - a.score)
 
   // 5. 多样性：单类最多 4 条，避免整屏都是融资新闻
   const picked = []
@@ -578,13 +523,9 @@ async function main() {
   const cfg = JSON.parse(await fs.readFile(path.join(ROOT, 'sources.json'), 'utf8'))
   const now = Date.now()
 
-  const proxy = detectProxy(cfg.proxy)
-  if (proxy) {
-    dispatcher = new ProxyAgent(proxy)
-    console.log(`[fetch] 走代理 ${proxy.replace(/\/\/.*@/, '//***@')}`)
-  } else {
-    console.log('[fetch] 直连（未检测到代理）')
-  }
+  const net = createDispatcher(cfg.proxy)
+  dispatcher = net.dispatcher
+  console.log(net.proxy ? `[fetch] 走代理 ${net.proxy.replace(/\/\/.*@/, '//***@')}` : '[fetch] 直连（未检测到代理）')
 
   let currentStage = cfp(cfg.currentStage, 2)
   try {
@@ -669,7 +610,12 @@ function cfp(value, fallback) {
   return Number.isFinite(Number(value)) ? Number(value) : fallback
 }
 
-main().catch((err) => {
-  console.error('[fetch] 失败：', err)
-  process.exitCode = 1
-})
+main()
+  .catch((err) => {
+    console.error('[fetch] 失败：', err)
+    process.exitCode = 1
+  })
+  .finally(async () => {
+    // 不关连接池的话，undici 的 keep-alive 会把进程拖住几十秒
+    if (dispatcher?.close) await dispatcher.close()
+  })

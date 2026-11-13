@@ -18,7 +18,7 @@
 
 ```bash
 npm install
-npm run update   # 抓一次数据
+npm run update   # 抓一次新闻 + 选型数据
 npm run dev      # 打开 http://127.0.0.1:5173
 ```
 
@@ -28,7 +28,7 @@ npm run dev      # 打开 http://127.0.0.1:5173
 npm run daily    # 先抓数据，再起服务
 ```
 
-不想敲命令，也可以打开页面后点右上角「立即更新」。
+不想敲命令，也可以打开页面后点右上角「更新」。页面发现数据过期（新闻超过 6 小时、选型超过 1 天）会自动在后台跑一次，不用手动点。
 
 服务在一个最小化的窗口里跑，标题是 `AI Learning Server`。关掉那个窗口就停止服务；重复双击 `start.bat` 不会起第二个进程，只会再打开一次页面。
 
@@ -40,6 +40,9 @@ npm run daily    # 先抓数据，再起服务
 | OpenAI、Google DeepMind | 官方博客 |
 | Simon Willison、Hacker News | 英文技术社区 |
 | GitHub Trending | 今日热门仓库（单独展示） |
+| OpenRouter | 模型价格、上下文长度、周榜名次（选型页） |
+
+选型页只自动更新能验证的部分：**价格**和**榜单名次**。额度、场景推荐、用途说明是人工维护的，不会被覆盖；用量数字 OpenRouter 没有公开接口，所以不显示，也不猜。
 
 代理会自动发现：先读 `sources.json` 里的 `proxy`，再看 `HTTPS_PROXY` 环境变量，最后读 Windows 系统代理设置。三者都没有就直连。检测不到代理也不影响中文源。
 

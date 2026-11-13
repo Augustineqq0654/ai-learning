@@ -150,6 +150,7 @@ async function boot() {
   }
 
   bindRefresh()
+  autoRefresh(page)
 }
 
 /* --------------------------------- 顶部 ---------------------------------- */
@@ -589,9 +590,15 @@ function goRows(list) {
 function renderModels() {
   const meta = $('#models-meta')
   if (meta) {
-    meta.textContent = models
-      ? `数据截至 ${models.statsThrough} · ${models.scenarios.length} 个场景 · Go 订阅 ${models.goModels.length} 个模型`
-      : '选型数据没加载出来'
+    if (!models) {
+      meta.textContent = '选型数据没加载出来'
+    } else {
+      const parts = []
+      if (models.priceUpdatedAt) parts.push(`价格自动更新于 ${models.priceUpdatedAt}`)
+      if (models.rankThrough) parts.push(`用量榜截至 ${models.rankThrough}`)
+      parts.push(`${models.scenarios.length} 个场景`, `Go ${models.goModels.length} 个模型`)
+      meta.textContent = parts.join(' · ')
+    }
   }
 
   const note = $('#models-note')
@@ -606,6 +613,19 @@ function renderModels() {
   if (models?.note) {
     const source = $('#models-source')
     if (source) source.textContent = models.note
+  }
+
+  const marketHint = $('#market-hint')
+  if (marketHint && models?.rankThrough) marketHint.textContent = `OpenRouter 周榜 · 截至 ${models.rankThrough} · 名次每天自动更新`
+
+  const goHint = $('#go-hint')
+  if (goHint) {
+    const missed = models?.priceMissed || []
+    goHint.textContent = !models
+      ? ''
+      : missed.length
+        ? `${models.priceMatched} 个模型的价格已跟 OpenRouter 对齐；${missed.length} 个没匹配到条目，价格保留人工填写：${missed.join('、')}`
+        : '价格已全部跟 OpenRouter 对齐。'
   }
 
   renderSceneFilters()
@@ -631,16 +651,15 @@ function renderModels() {
   const marketTable = $('#market-table')
   if (marketTable && models) {
     marketTable.innerHTML = `
-      <thead><tr><th>#</th><th>模型</th><th>周用量</th><th>占前十</th><th>大家拿它干什么</th></tr></thead>
+      <thead><tr><th>#</th><th>模型</th><th>厂商</th><th>大家拿它干什么</th></tr></thead>
       <tbody>${(models.market || [])
         .map(
           (m) => `
         <tr>
           <td class="rank">${m.rank}</td>
-          <td class="model-name">${esc(m.name)}<span class="vendor">${esc(m.vendor)}</span></td>
-          <td class="mono">${esc(m.weekly)}</td>
-          <td class="share"><span class="share-bar"><span style="width:${m.share}%"></span></span><span class="share-num">${m.share}%</span></td>
-          <td>${esc(m.best)}</td>
+          <td class="model-name">${esc(m.name)}</td>
+          <td class="muted-cell">${esc(m.vendor)}</td>
+          <td>${esc(m.best || '—')}</td>
         </tr>`
         )
         .join('')}</tbody>`
@@ -649,6 +668,57 @@ function renderModels() {
   const tips = $('#tips-list')
   if (tips && models) {
     tips.innerHTML = (models.tips || []).map((t) => `<li>${esc(t)}</li>`).join('')
+  }
+}
+
+/* --------------------------------- 自动更新 -------------------------------- */
+
+const STALE_NEWS_MS = 6 * 3600 * 1000
+const STALE_MODELS_MS = 24 * 3600 * 1000
+
+function isStale(page) {
+  const now = Date.now()
+  if (page === 'news' || page === 'projects') {
+    return !news?.fetchedAt || now - Date.parse(news.fetchedAt) > STALE_NEWS_MS
+  }
+  if (page === 'models') {
+    const stamp = models?.updatedAt ? Date.parse(`${models.updatedAt}T00:00:00`) : 0
+    return !stamp || now - stamp > STALE_MODELS_MS
+  }
+  return false
+}
+
+/** 打开页面时如果数据过期，静默跑一次抓取；失败就当作没发生 */
+async function autoRefresh(page) {
+  if (!isStale(page)) return
+
+  const btn = $('#refresh')
+  const label = btn?.textContent
+  if (btn) {
+    btn.disabled = true
+    btn.textContent = '更新中…'
+  }
+
+  try {
+    const res = await fetch('/api/refresh', { method: 'POST' })
+    const data = await res.json()
+    if (data.running || !data.ok) return
+
+    news = await getJson('/api/news').catch(() => news)
+    models = await getJson('/data/models.json').catch(() => models)
+    renderMeta()
+    renderNewsFilters()
+    renderNews()
+    renderDiscoveries()
+    renderModels()
+    toast('数据已自动更新')
+  } catch {
+    /* 后台更新失败不打扰用户 */
+  } finally {
+    if (btn) {
+      btn.disabled = false
+      btn.textContent = label || '更新'
+    }
   }
 }
 
@@ -669,11 +739,13 @@ function bindRefresh() {
       }
       if (!data.ok) throw new Error(data.error || '抓取失败')
       news = await getJson('/api/news')
+      models = await getJson('/data/models.json').catch(() => models)
       renderMeta()
       renderNewsFilters()
       renderNews()
       renderDiscoveries()
-      toast(`已更新 · ${news.items?.length || 0} 条`)
+      renderModels()
+      toast(`已更新 · ${news.items?.length || 0} 条新闻`)
     } catch (err) {
       toast(`更新失败：${err.message}`)
     } finally {

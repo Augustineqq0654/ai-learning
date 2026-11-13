@@ -133,6 +133,20 @@ const dispatcher = proxy ? new ProxyAgent(proxy) : undefined
 
 全部记录在 `data/tutorials.json`。新增前必须验证可访问：知乎对服务端请求返回 403（反爬），要用真实浏览器打开确认标题正常；本轮已剔除 1 个失效链接。
 
+### 4.5 选型数据
+
+| 内容 | 来源 | 更新方式 |
+|---|---|---|
+| 价格（每百万 token） | OpenRouter `/api/v1/models` | 自动 |
+| 上下文长度 | 同上 | 自动 |
+| 周榜前 10 名与名次 | `openrouter.ai/rankings` 的 JSON-LD | 自动 |
+| 额度、场景推荐、用途、结论 | 人工 | 手动 |
+
+- OpenRouter 的价格是「每 token 美元」，×1e6 换算后才写进 JSON
+- 模型名只在「归一化后唯一同名」时匹配，避免把 Flash 和 FlashX 弄混；匹配不上的保留人工价，页面底部会写明是哪几个
+- 用量数字没有公开接口，所以不显示也不猜，只保留名次
+- 内容没变化时不写盘，避免每次自动刷新把 git 工作区弄脏
+
 ---
 
 ## 5. 处理流程
@@ -402,11 +416,11 @@ score = 0.40 × 阶段匹配
 |---|---|---|
 | 前端 | 原生 HTML / CSS / JS，无构建 | 单文件改起来快，没有构建等待，不需要 node_modules |
 | 服务 | `server.js`，Node 原生 `http` | 只做两件事：发静态文件、触发刷新 |
-| 抓取 | `fetch-data.js`，Node 内置 fetch | 零依赖（RSS 解析手写轻量实现） |
+| 抓取 | `fetch-data.js` + `fetch-models.js`，`lib/net.js` 统一网络层 | 代理自动发现、超时重试只写一遍 |
 | 数据 | JSON 文件 | 人可读、可手改、可直接备份 |
 | 状态 | localStorage | 不需要后端即可保存进度 |
 
-依赖只有：`undici`（仅代理场景需要）。其余全部原生。
+依赖只有：`undici`（代理 + fetch）。其余全部原生。
 
 ### 9.2 文件结构
 
@@ -414,10 +428,13 @@ score = 0.40 × 阶段匹配
 ai-learning/
 ├─ PLAN.md                  # 方案文档
 ├─ server.js                # 静态服务 + POST /api/refresh + GET /api/news
-├─ fetch-data.js            # 抓取 → 去重 → 分类 → 打分 → 写 JSON
-├─ sources.json             # 数据源配置（可随时增删）
+├─ fetch-data.js            # 新闻：抓取 → 去重 → 分类 → 打分 → 写 JSON
+├─ fetch-models.js          # 选型：价格 / 名次自动更新，人工字段不动
+├─ lib/net.js               # 代理发现 + 超时重试，两个抓取脚本共用
+├─ sources.json             # 新闻源配置（可随时增删）
 ├─ data/
 │  ├─ news.json             # 自动生成（含 items + discoveries）
+│  ├─ models.json           # 价格/名次自动，其余人工
 │  ├─ roadmap.json          # 手写：五阶段 / 30 个任务
 │  ├─ projects.json         # 手写：9 个项目
 │  └─ tutorials.json        # 手写：13 个常驻教程
@@ -426,6 +443,7 @@ ai-learning/
    ├─ study.html            # 我在这一步 + 今日任务
    ├─ projects.html         # 项目库
    ├─ tutorials.html        # 精选教程
+   ├─ models.html           # 模型选型
    ├─ app.js                # 按 data-page 只渲染当前页
    └─ style.css
 ```
@@ -433,9 +451,11 @@ ai-learning/
 ### 9.3 命令
 
 ```bash
-npm run update   # 只抓数据，不启服务（适合配 Windows 计划任务）
-npm run dev      # 起服务，浏览器开 http://127.0.0.1:5173
-npm run daily    # update + 起服务（日常用这个）
+npm run update         # 新闻 + 选型，一次抓完
+npm run update:news    # 只抓新闻
+npm run update:models  # 只更新价格和榜单名次
+npm run dev            # 起服务，浏览器开 http://127.0.0.1:5173
+npm run daily          # update + 起服务（日常用这个）
 ```
 
 ### 9.4 前端交互

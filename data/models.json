@@ -1,48 +1,17 @@
 {
-  "updatedAt": "2026-11-13",
+  "updatedAt": "2026-11-17",
   "statsThrough": "2026-11-09",
   "note": "用量榜名次来自 OpenRouter 周榜（自动更新），价格为 OpenRouter 挂牌价 USD/百万 token（自动更新）；额度、场景推荐、用途说明为人工维护。用量数字为上次人工核对值，新上榜模型会显示 —。",
   "conclusion": [
-    "90% 的活交给 DeepSeek V4.1 Flash：编码实测 80 分、一个长会话 $0.14，Go 里月额度 $100。",
-    "难题再切 Kimi K3.1 Pro 或 GLM 5.3；规划确认后立刻切回便宜模型执行。",
-    "多模态用 Gemini 4 Argon，长文用 MiniMax M3（512K），实时热点用 Grok 4.7。"
-  ],
-  "groups": [
-    {
-      "id": "all",
-      "label": "全部"
-    },
-    {
-      "id": "code",
-      "label": "编码"
-    },
-    {
-      "id": "context",
-      "label": "长文"
-    },
-    {
-      "id": "vision",
-      "label": "视觉"
-    },
-    {
-      "id": "writing",
-      "label": "写作"
-    },
-    {
-      "id": "realtime",
-      "label": "实时"
-    },
-    {
-      "id": "free",
-      "label": "兜底"
-    }
+    "默认就用 DeepSeek V4.1 Flash：写代码、改 bug、批量改文件它都能干，便宜到不用算。",
+    "只有三种情况换模型：卡住了切 Kimi K3.1 Pro，资料太长切 MiniMax M3，要看图切 Gemini 4 Argon。",
+    "换完记得切回来。贵模型只干难活，这是省钱的全部秘密。"
   ],
   "scenarios": [
     {
       "id": "daily-code",
-      "group": "code",
-      "groupLabel": "编码",
-      "name": "日常写代码、改 bug",
+      "name": "日常编码",
+      "desc": "写代码、改 bug、批量改文件、跑脚本",
       "primary": {
         "model": "DeepSeek V4.1 Flash",
         "why": "80 分、$0.14 一个长会话，额度 $100 够造"
@@ -51,13 +20,12 @@
         "model": "GLM 5.3 Flash",
         "why": "短问题 83 分，响应更快"
       },
-      "tip": "默认模型就设它，思考档 high；改错别字、格式化再降到 low。"
+      "tip": "默认模型设它，思考档 high；改错别字、格式化降到 low。"
     },
     {
-      "id": "refactor",
-      "group": "code",
-      "groupLabel": "编码",
-      "name": "复杂重构、架构设计",
+      "id": "hard-problem",
+      "name": "难题攻坚",
+      "desc": "重构、架构、复杂排查、先规划再动手",
       "primary": {
         "model": "Kimi K3.1 Pro",
         "why": "开源里最聪明，诊断和规划明显更强"
@@ -66,43 +34,12 @@
         "model": "GLM 5.3",
         "why": "长会话 71%，比 Kimi 便宜近一半"
       },
-      "tip": "只在难题切。K3.1 Pro 一个长会话能写 98K 输出 token，慢且贵。"
+      "tip": "只在卡住时切。K3.1 Pro 一个长会话能写 98K 输出 token，慢且贵。"
     },
     {
-      "id": "plan-first",
-      "group": "code",
-      "groupLabel": "编码",
-      "name": "先规划再动手",
-      "primary": {
-        "model": "Kimi K3.1 Pro",
-        "why": "拆任务、找隐藏依赖最稳"
-      },
-      "alternative": {
-        "model": "Qwen3.8 Max",
-        "why": "中文需求理解好，指数 53.4"
-      },
-      "tip": "plan 模式确认方案后切回 DeepSeek 执行，别让贵模型干体力活。"
-    },
-    {
-      "id": "batch",
-      "group": "code",
-      "groupLabel": "编码",
-      "name": "批量改文件、跑 CI",
-      "primary": {
-        "model": "DeepSeek V4.1 Flash",
-        "why": "每任务成本最低，失败可重试不心疼"
-      },
-      "alternative": {
-        "model": "MiMo V2.6 Flash",
-        "why": "$0.14 / $0.28，日用量一周涨 112%"
-      },
-      "tip": "按目录分批跑，关掉多余思考，日志留好方便回滚。"
-    },
-    {
-      "id": "repo",
-      "group": "context",
-      "groupLabel": "长文",
-      "name": "读整个仓库、长文档",
+      "id": "long-context",
+      "name": "读代码与长文档",
+      "desc": "整个仓库、长文档、日志、论文",
       "primary": {
         "model": "MiniMax M3",
         "why": "512K 上下文，一次装下整个模块"
@@ -114,10 +51,9 @@
       "tip": "注意 256K / 512K 的计费跳档，先裁掉无关文件再喂。"
     },
     {
-      "id": "ui",
-      "group": "vision",
-      "groupLabel": "视觉",
-      "name": "前端、UI 还原",
+      "id": "vision",
+      "name": "前端与截图",
+      "desc": "UI 还原、设计稿、报错截图",
       "primary": {
         "model": "Claude Haiku 5.5",
         "why": "Anthropic 的界面审美，组件代码干净"
@@ -129,91 +65,28 @@
       "tip": "截图 + 现有组件代码 + 一句风格要求，三件套一起给。"
     },
     {
-      "id": "screenshot",
-      "group": "vision",
-      "groupLabel": "视觉",
-      "name": "看报错截图、设计稿",
-      "primary": {
-        "model": "Gemini 4 Argon",
-        "why": "多模态最强，Arena 文本榜也第一"
-      },
-      "alternative": {
-        "model": "Claude Haiku 5.5",
-        "why": "读代码截图够用，便宜"
-      },
-      "tip": "把「期望结果」一并写进提示词，比只发截图准得多。"
-    },
-    {
-      "id": "zh-writing",
-      "group": "writing",
-      "groupLabel": "写作",
-      "name": "中文写作、文案、汇报",
+      "id": "writing",
+      "name": "写作与文案",
+      "desc": "中文汇报、英文润色、README、提交信息",
       "primary": {
         "model": "Qwen3.8 Max",
         "why": "中文语感最稳，长文不散"
       },
       "alternative": {
-        "model": "GLM 5.3",
-        "why": "更便宜，短文案够用"
-      },
-      "tip": "长文用 Max，标题和短文案用 Flash，成本差三倍。"
-    },
-    {
-      "id": "en-writing",
-      "group": "writing",
-      "groupLabel": "写作",
-      "name": "英文写作、润色",
-      "primary": {
         "model": "Claude Haiku 5.5",
-        "why": "句式和语气最接近母语编辑"
+        "why": "英文句式和语气最像母语编辑"
       },
-      "alternative": {
-        "model": "GPT 6 Luna",
-        "why": "$0.10 / $0.50，批量改写首选"
-      },
-      "tip": "润色时给「目标读者 + 语气 + 长度」，别只说 improve。"
+      "tip": "中文用 Max，英文用 Haiku；标题和 commit message 用 GPT 6 Luna 就够。"
+    }
+  ],
+  "extras": [
+    {
+      "label": "查实时热点",
+      "model": "Grok 4.7"
     },
     {
-      "id": "realtime",
-      "group": "realtime",
-      "groupLabel": "实时",
-      "name": "查实时信息、追热点",
-      "primary": {
-        "model": "Grok 4.7",
-        "why": "Go 里唯一带原生 X 数据的模型"
-      },
-      "alternative": null,
-      "tip": "热点、舆情、新品发布优先用它；严肃事实仍要回原链接核对。"
-    },
-    {
-      "id": "terminal",
-      "group": "code",
-      "groupLabel": "编码",
-      "name": "终端命令、自动化脚本",
-      "primary": {
-        "model": "Step 5 Preview",
-        "why": "工具调用型，周用量 7.15T"
-      },
-      "alternative": {
-        "model": "Kimi K2.7 Code",
-        "why": "专用编码模型，适合长跑"
-      },
-      "tip": "让它先输出命令再执行，危险操作加确认，别直接放权。"
-    },
-    {
-      "id": "free",
-      "group": "free",
-      "groupLabel": "兜底",
-      "name": "零成本试用、额度用完",
-      "primary": {
-        "model": "Beam Free",
-        "why": "完全免费，额度不限"
-      },
-      "alternative": {
-        "model": "LongCat 2.5 Free",
-        "why": "同免费，但需在设置里开 Global"
-      },
-      "tip": "免费模型限时、限区，重要任务别押在它们身上。"
+      "label": "额度用完",
+      "model": "Beam Free / LongCat 2.5 Free"
     }
   ],
   "goTiers": [
@@ -237,7 +110,7 @@
     {
       "tier": "S",
       "name": "DeepSeek V4.1 Flash",
-      "price": "$0.30 / $1.20",
+      "price": "$0.05 / $0.20",
       "quota": "$100",
       "best": "默认主力：日常编码、长 Agent 会话",
       "note": "低峰价，高峰翻倍",
@@ -303,7 +176,7 @@
     {
       "tier": "S",
       "name": "Kimi K3.1 Pro",
-      "price": "$2.00 / $10.00",
+      "price": "$0.24 / $8.40",
       "quota": "$15",
       "best": "高难度诊断、方案规划",
       "note": "慢，单会话约 98K 输出",
@@ -336,7 +209,7 @@
     {
       "tier": "A",
       "name": "GLM 5.3",
-      "price": "$0.08 / $3.60",
+      "price": "$0.07 / $1.40",
       "quota": "$15",
       "best": "非 DeepSeek 的最佳编码备选",
       "note": "长会话 71%",
@@ -377,7 +250,7 @@
     {
       "tier": "A",
       "name": "Kimi K2.7 Code",
-      "price": "$0.60 / $3.50",
+      "price": "$0.70 / $3.75",
       "quota": "$60",
       "best": "专用编码，适合长跑",
       "note": "代码专精",
@@ -580,27 +453,27 @@
     },
     {
       "rank": 8,
-      "name": "Kimi K3.1 Pro",
-      "vendor": "Moonshot",
-      "orId": "moonshotai/kimi-k3.1-pro",
-      "weekly": "4.39T",
-      "share": 3.2,
-      "best": "深度诊断、方案规划"
+      "name": "MiMo-V2.6-Flash",
+      "vendor": "xiaomi",
+      "orId": "xiaomi/mimo-v2.6-flash",
+      "weekly": null,
+      "share": null,
+      "best": ""
     },
     {
       "rank": 9,
-      "name": "GPT-6.1 Sol",
-      "vendor": "OpenAI",
-      "orId": "openai/gpt-6.1-sol",
+      "name": "GLM 5.3",
+      "vendor": "Z.ai",
+      "orId": "z-ai/glm-5.3",
       "weekly": null,
       "share": null,
       "best": ""
     },
     {
       "rank": 10,
-      "name": "GLM 5.3",
-      "vendor": "Z.ai",
-      "orId": "z-ai/glm-5.3",
+      "name": "GPT-6.1 Sol",
+      "vendor": "OpenAI",
+      "orId": "openai/gpt-6.1-sol",
       "weekly": null,
       "share": null,
       "best": ""
@@ -611,7 +484,7 @@
     "用 variant 控制思考深度：格式化用 low，debug 用 high，别一路 max 烧 token。",
     "错峰使用：DeepSeek 低峰价是高峰的一半，批量任务挪到低峰跑。"
   ],
-  "priceUpdatedAt": "2026-11-13",
+  "priceUpdatedAt": "2026-11-17",
   "priceMatched": 21,
   "priceMissed": [
     "DeepSeek V4 Pro",
@@ -621,7 +494,7 @@
     "LongCat 2.5 Free",
     "Crouton Alpha"
   ],
-  "rankUpdatedAt": "2026-11-13",
-  "rankThrough": "2026-11-12",
-  "lastAttemptAt": "2026-11-13T11:35:05.687Z"
+  "rankUpdatedAt": "2026-11-17",
+  "rankThrough": "2026-11-16",
+  "lastAttemptAt": "2026-11-17T12:47:36.280Z"
 }

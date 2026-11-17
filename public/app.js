@@ -27,7 +27,6 @@ let models = null
 
 let newsFilter = 'all'
 let projectFilter = 'all'
-let sceneFilter = 'all'
 
 /* --------------------------------- 工具 ---------------------------------- */
 
@@ -529,32 +528,12 @@ function sceneCard(s) {
     <article class="scene">
       <div class="scene-head">
         <h3>${esc(s.name)}</h3>
-        <span class="chip scene-tag">${esc(s.groupLabel)}</span>
+        <span class="scene-desc">${esc(s.desc)}</span>
       </div>
       <div class="pick"><span class="pick-label">首选</span><b>${esc(s.primary.model)}</b><span class="pick-why">${esc(s.primary.why)}</span></div>
       ${alt}
       <p class="scene-tip">${esc(s.tip)}</p>
     </article>`
-}
-
-function renderSceneFilters() {
-  const box = $('#scene-filters')
-  if (!box) return
-
-  const present = new Set((models?.scenarios || []).map((s) => s.group))
-  const chips = (models?.groups || []).filter((g) => g.id === 'all' || present.has(g.id))
-
-  box.innerHTML = chips
-    .map((g) => `<button class="filter ${sceneFilter === g.id ? 'on' : ''}" data-group="${g.id}">${g.label}</button>`)
-    .join('')
-
-  box.querySelectorAll('.filter').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      sceneFilter = btn.dataset.group
-      renderSceneFilters()
-      renderScenes()
-    })
-  })
 }
 
 function renderScenes() {
@@ -567,8 +546,16 @@ function renderScenes() {
     return
   }
 
-  const list = all.filter((s) => sceneFilter === 'all' || s.group === sceneFilter)
-  box.innerHTML = list.map(sceneCard).join('')
+  box.innerHTML = all.map(sceneCard).join('')
+
+  const extras = $('#scene-extras')
+  if (extras) {
+    const list = models?.extras || []
+    extras.innerHTML = list
+      .map((e) => `<span class="extra"><span class="extra-label">${esc(e.label)}</span><b>${esc(e.model)}</b></span>`)
+      .join('')
+    extras.hidden = !list.length
+  }
 }
 
 function goRows(list) {
@@ -628,7 +615,6 @@ function renderModels() {
         : '价格已全部跟 OpenRouter 对齐。'
   }
 
-  renderSceneFilters()
   renderScenes()
 
   const goTable = $('#go-table')

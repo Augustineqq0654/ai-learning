@@ -535,6 +535,78 @@ a {
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
+.task-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.task-pos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-badge {
+  font-size: 11px;
+  line-height: 1.6;
+  padding: 0 7px;
+  border-radius: 4px;
+}
+
+.task-badge.is-done {
+  color: var(--cat-resource);
+  background: var(--cat-resource-bg);
+}
+
+.task-badge.is-skip {
+  color: var(--cat-industry);
+  background: var(--cat-industry-bg);
+}
+
+.task-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon-btn {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.icon-btn:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: #d8d4cb;
+}
+
+.icon-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.task-count {
+  min-width: 42px;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+}
+
 .task-title {
   margin: 4px 0 0;
   font-size: 17px;

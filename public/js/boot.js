@@ -7,6 +7,7 @@ import * as projectsPage from './pages/projects.js'
 import * as tutorialsPage from './pages/tutorials.js'
 import * as modelsPage from './pages/models.js'
 import * as promptsPage from './pages/prompts.js'
+import * as recordsPage from './pages/records.js'
 
 const PAGES = {
   news: newsPage,
@@ -15,6 +16,7 @@ const PAGES = {
   tutorials: tutorialsPage,
   models: modelsPage,
   prompts: promptsPage,
+  records: recordsPage,
 }
 
 const STALE_NEWS_MS = 6 * 3600 * 1000

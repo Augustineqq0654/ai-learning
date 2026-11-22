@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>记录 · AI 学习驾驶舱</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body data-page="records">
+    <nav class="nav">
+      <div class="nav-inner">
+        <a class="nav-brand" href="/">AI 学习驾驶舱</a>
+        <div class="nav-links">
+          <a class="nav-link" href="/">速览</a>
+          <a class="nav-link" href="/study.html">学习</a>
+          <a class="nav-link" href="/projects.html">项目库</a>
+          <a class="nav-link" href="/tutorials.html">教程</a>
+          <a class="nav-link" href="/models.html">选型</a>
+          <a class="nav-link" href="/prompts.html">提示词</a>
+          <a class="nav-link active" href="/records.html">记录</a>
+        </div>
+        <div class="nav-actions">
+          <span class="streak" id="streak" hidden></span>
+          <button class="btn btn-sm" id="refresh" hidden>更新</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="page-head">
+        <h1>记录 <span class="count" id="records-total"></span></h1>
+        <p class="sub" id="records-meta">正在读取 records/ …</p>
+      </header>
+
+      <div id="records-list-view">
+        <div class="record-list" id="records-list"></div>
+      </div>
+
+      <article id="record-view" hidden>
+        <div class="record-bar">
+          <button class="btn btn-sm" id="record-back">← 返回列表</button>
+          <span class="hint" id="record-meta"></span>
+        </div>
+        <div class="md-body" id="record-body"></div>
+      </article>
+
+      <footer class="foot">
+        <span>把 Markdown 丢进项目根目录的 records/ 就行，支持子文件夹，刷新即见</span>
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+    <script type="module" src="/js/boot.js"></script>
+  </body>
+</html>

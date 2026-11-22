@@ -1474,3 +1474,205 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+/* 记录页 */
+.record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.record-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 13px 16px;
+  transition: border-color 0.15s;
+}
+
+.record-card:hover {
+  border-color: rgba(46, 107, 82, 0.38);
+}
+
+.record-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.record-excerpt {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.record-meta {
+  font-size: 11.5px;
+  color: var(--muted-2);
+}
+
+.record-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.record-bar .hint {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--muted-2);
+  text-align: right;
+}
+
+/* Markdown 正文 */
+.md-body {
+  max-width: 72ch;
+  font-size: 14.5px;
+  line-height: 1.85;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+
+.md-body > :first-child {
+  margin-top: 0;
+}
+
+.md-body h1,
+.md-body h2,
+.md-body h3,
+.md-body h4,
+.md-body h5,
+.md-body h6 {
+  margin: 1.6em 0 0.6em;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.md-body h1 {
+  font-size: 24px;
+}
+
+.md-body h2 {
+  font-size: 19px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.md-body h3 {
+  font-size: 16px;
+}
+
+.md-body h4,
+.md-body h5,
+.md-body h6 {
+  font-size: 14.5px;
+}
+
+.md-body p {
+  margin: 0.8em 0;
+}
+
+.md-body ul,
+.md-body ol {
+  margin: 0.7em 0;
+  padding-left: 1.5em;
+}
+
+.md-body li {
+  margin: 0.25em 0;
+}
+
+.md-body a {
+  color: var(--accent);
+  border-bottom: 1px solid rgba(46, 107, 82, 0.25);
+}
+
+.md-body a:hover {
+  border-bottom-color: var(--accent);
+}
+
+.md-body code {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, "Courier New", monospace;
+  font-size: 12.8px;
+  color: var(--ink);
+  background: var(--surface-soft);
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.md-body pre {
+  margin: 1em 0;
+  padding: 12px 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.md-body pre code {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.md-body blockquote {
+  margin: 1em 0;
+  padding: 2px 0 2px 14px;
+  border-left: 3px solid var(--line);
+  color: var(--muted);
+}
+
+.md-body hr {
+  margin: 1.8em 0;
+  border: none;
+  border-top: 1px solid var(--line);
+}
+
+.md-body table {
+  display: block;
+  width: 100%;
+  margin: 1em 0;
+  border-collapse: collapse;
+  font-size: 13px;
+  overflow-x: auto;
+}
+
+.md-body th,
+.md-body td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.md-body th {
+  background: var(--surface-soft);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.md-body img {
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.md-body del {
+  color: var(--muted-2);
+}

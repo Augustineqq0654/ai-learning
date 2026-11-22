@@ -47,10 +47,10 @@
 
 ## 3. 信息架构
 
-六个页面，固定顶部导航切换。每页只回答一个问题。
+七个页面，固定顶部导航切换。每页只回答一个问题。
 
 ```
-[ 固定导航 ] AI 学习驾驶舱 | 速览 | 学习 | 项目库 | 教程 | 选型 | 提示词 | 连续 12 天 | 更新
+[ 固定导航 ] AI 学习驾驶舱 | 速览 | 学习 | 项目库 | 教程 | 选型 | 提示词 | 记录 | 连续 12 天 | 更新
 
 ① 速览    /             今天有什么值得看 —— 8 条新闻 + 分类筛选
 ② 学习    /study.html   我现在该做什么 —— 当前阶段 + 今日任务
@@ -58,6 +58,7 @@
 ④ 教程    /tutorials.html 看什么学 —— 13 个教程，按阶段分组
 ⑤ 选型    /models.html   该用哪个模型 —— 5 个日常场景 + Go 常用模型
 ⑥ 提示词  /prompts.html  怎么把话说清楚 —— dsh-prompt 的 24 条预置模板卡片
+⑦ 记录    /records.html  我自己学到了什么 —— records/ 里的 Markdown 笔记
 ```
 
 ### 页面规则
@@ -70,6 +71,7 @@
 | 教程 `/tutorials.html` | 看什么学 | 13 个教程，按阶段分组 | 点开原文 |
 | 选型 `/models.html` | 该用哪个模型 | 5 个日常场景 + Go 27 个模型 + 用量 Top 10 | 展开 B 级模型 |
 | 提示词 `/prompts.html` | 怎么把话说清楚 | dsh-prompt 的 24 条预置模板（4 个域） | 搜索、按域筛选、展开正文、一键复制 |
+| 记录 `/records.html` | 我自己学到了什么 | `records/` 下的 Markdown，按修改时间倒序 | 点开阅读、返回列表、`?doc=` 深链 |
 
 导航固定 56px 高，滚动时始终可见；页面内容留 88px 顶部内边距。
 
@@ -429,11 +431,13 @@ score = 0.40 × 阶段匹配
 ```
 ai-learning/
 ├─ PLAN.md                  # 方案文档
-├─ server.js                # 静态服务 + POST /api/refresh + GET /api/news
+├─ server.js                # 静态服务 + GET /api/news + POST /api/refresh + GET /api/records
 ├─ fetch-data.js            # 新闻：抓取 → 去重 → 分类 → 打分 → 写 JSON
 ├─ fetch-models.js          # 选型：价格 / 名次自动更新，人工字段不动
 ├─ fetch-prompts.js          # 提示词：从本机 dsh-prompt 抽预置模板 → data/prompts.json
 ├─ lib/net.js               # 代理发现 + 超时重试，两个抓取脚本共用
+├─ lib/markdown.js          # 极简 Markdown → HTML，记录页用（默认转义 HTML）
+├─ records/                 # 学习记录：自己的 .md 笔记，支持子文件夹
 ├─ sources.json             # 新闻源配置（可随时增删）
 ├─ data/
 │  ├─ news.json             # 自动生成（含 items + discoveries）
@@ -449,6 +453,7 @@ ai-learning/
    ├─ tutorials.html        # 精选教程
    ├─ models.html           # 模型选型
    ├─ prompts.html          # 提示词卡片墙
+   ├─ records.html          # 学习记录：列表 + 阅读态
    ├─ css/
    │  └─ style.css
    └─ js/
@@ -460,7 +465,8 @@ ai-learning/
          ├─ projects.js     # 项目库：新发现 / 项目卡片
          ├─ tutorials.js    # 教程：按阶段分组
          ├─ models.js       # 选型：场景 / 模型表 / 用量榜
-         └─ prompts.js      # 提示词：卡片 / 搜索 / 域筛选 / 复制
+         ├─ prompts.js      # 提示词：卡片 / 搜索 / 域筛选 / 复制
+         └─ records.js      # 记录：列表 / 阅读 / 深链
 ```
 
 ### 9.3 命令

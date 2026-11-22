@@ -47,16 +47,17 @@
 
 ## 3. 信息架构
 
-五个页面，固定顶部导航切换。每页只回答一个问题。
+六个页面，固定顶部导航切换。每页只回答一个问题。
 
 ```
-[ 固定导航 ] AI 学习驾驶舱 | 速览 | 学习 | 项目库 | 教程 | 选型 | 连续 12 天 | 更新
+[ 固定导航 ] AI 学习驾驶舱 | 速览 | 学习 | 项目库 | 教程 | 选型 | 提示词 | 连续 12 天 | 更新
 
 ① 速览    /             今天有什么值得看 —— 8 条新闻 + 分类筛选
 ② 学习    /study.html   我现在该做什么 —— 当前阶段 + 今日任务
 ③ 项目库  /projects.html 能做点什么 —— 9 个项目 + 今日新发现
 ④ 教程    /tutorials.html 看什么学 —— 13 个教程，按阶段分组
 ⑤ 选型    /models.html   该用哪个模型 —— 5 个日常场景 + Go 常用模型
+⑥ 提示词  /prompts.html  怎么把话说清楚 —— dsh-prompt 的 24 条预置模板卡片
 ```
 
 ### 页面规则
@@ -68,6 +69,7 @@
 | 项目库 `/projects.html` | 能做点什么 | 9 个项目 + 今日新发现 | 按阶段筛选、展开步骤 |
 | 教程 `/tutorials.html` | 看什么学 | 13 个教程，按阶段分组 | 点开原文 |
 | 选型 `/models.html` | 该用哪个模型 | 5 个日常场景 + Go 27 个模型 + 用量 Top 10 | 展开 B 级模型 |
+| 提示词 `/prompts.html` | 怎么把话说清楚 | dsh-prompt 的 24 条预置模板（4 个域） | 搜索、按域筛选、展开正文、一键复制 |
 
 导航固定 56px 高，滚动时始终可见；页面内容留 88px 顶部内边距。
 
@@ -430,11 +432,13 @@ ai-learning/
 ├─ server.js                # 静态服务 + POST /api/refresh + GET /api/news
 ├─ fetch-data.js            # 新闻：抓取 → 去重 → 分类 → 打分 → 写 JSON
 ├─ fetch-models.js          # 选型：价格 / 名次自动更新，人工字段不动
+├─ fetch-prompts.js          # 提示词：从本机 dsh-prompt 抽预置模板 → data/prompts.json
 ├─ lib/net.js               # 代理发现 + 超时重试，两个抓取脚本共用
 ├─ sources.json             # 新闻源配置（可随时增删）
 ├─ data/
 │  ├─ news.json             # 自动生成（含 items + discoveries）
 │  ├─ models.json           # 价格/名次自动，其余人工
+│  ├─ prompts.json          # 从 dsh-prompt 插件抽取（24 条预置模板）
 │  ├─ roadmap.json          # 手写：五阶段 / 30 个任务
 │  ├─ projects.json         # 手写：9 个项目
 │  └─ tutorials.json        # 手写：13 个常驻教程
@@ -444,6 +448,7 @@ ai-learning/
    ├─ projects.html         # 项目库
    ├─ tutorials.html        # 精选教程
    ├─ models.html           # 模型选型
+   ├─ prompts.html          # 提示词卡片墙
    ├─ css/
    │  └─ style.css
    └─ js/
@@ -454,15 +459,17 @@ ai-learning/
          ├─ study.js        # 学习：阶段 / 今日任务
          ├─ projects.js     # 项目库：新发现 / 项目卡片
          ├─ tutorials.js    # 教程：按阶段分组
-         └─ models.js       # 选型：场景 / 模型表 / 用量榜
+         ├─ models.js       # 选型：场景 / 模型表 / 用量榜
+         └─ prompts.js      # 提示词：卡片 / 搜索 / 域筛选 / 复制
 ```
 
 ### 9.3 命令
 
 ```bash
-npm run update         # 新闻 + 选型，一次抓完
+npm run update         # 新闻 + 选型 + 提示词，一次抓完
 npm run update:news    # 只抓新闻
 npm run update:models  # 只更新价格和榜单名次
+npm run update:prompts # 从本机 dsh-prompt 重新抽预置模板
 npm run dev            # 起服务，浏览器开 http://127.0.0.1:5173
 npm run daily          # update + 起服务（日常用这个）
 ```

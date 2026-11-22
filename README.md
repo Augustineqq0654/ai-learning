@@ -2,13 +2,14 @@
 
 每天打开，3 秒内知道今天该学什么、有什么值得看。
 
-五个页面，固定顶部导航切换：
+六个页面，固定顶部导航切换：
 
 - **速览** `/` —— 自动抓取 7 个源，去重打分，只留 8 条
 - **学习** `/study.html` —— 我在这一步 + 今日任务，每天只推 1 个任务，可前后翻看
 - **项目库** `/projects.html` —— 9 个把 AI 用出效果的项目，不写代码，每个附教程
 - **教程** `/tutorials.html` —— 13 个常驻教程，优先 GitHub / 知乎 / 博客园
 - **选型** `/models.html` —— 5 个日常场景的首选 / 备选模型 + OpenCode Go 常用模型与用量榜
+- **提示词** `/prompts.html` —— dsh-prompt 插件自带的 24 条预置模板，卡片展示，可搜索、按域筛选、一键复制
 
 ## 快速开始
 
@@ -54,7 +55,8 @@ npm run daily    # 先抓数据，再起服务
 - 改教程清单 → `data/tutorials.json`
 - 改模型选型 → `data/models.json`
 - 改配色和排版 → `public/css/style.css`
-- 改某个页面的渲染 → `public/js/pages/` 下对应的文件（`news` / `study` / `projects` / `tutorials` / `models`）
+- 改某个页面的渲染 → `public/js/pages/` 下对应的文件（`news` / `study` / `projects` / `tutorials` / `models` / `prompts`）
+- 更新提示词卡片 → `npm run update:prompts`（从本机已安装的 dsh-prompt 重新抽取，结果在 `data/prompts.json`）
 
 学习进度存在浏览器的 localStorage，不备份也不上传。清缓存会丢进度。
 

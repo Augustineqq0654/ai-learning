@@ -1,6 +1,6 @@
 /**
  * server.js
- * 两件事：发静态文件、触发一次抓取。
+ * 三件事：发静态文件、触发一次抓取、把 records/ 里的 Markdown 渲染成页面。
  * 只监听 127.0.0.1，不对外暴露。
  */
 
@@ -10,6 +10,7 @@ import fsp from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
+import { plainText, renderMarkdown } from './lib/markdown.js'
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url))
 const PORT = Number(process.env.PORT || 5173)
@@ -117,6 +118,108 @@ async function handleRefresh(res) {
   sendJson(res, ok ? 200 : 500, { ok, results })
 }
 
+/* --------------------------------- 学习记录 -------------------------------- */
+
+const RECORDS_DIR = path.join(ROOT, 'records')
+const RECORD_MAX_BYTES = 2 * 1024 * 1024
+const HEAD_BYTES = 8 * 1024
+
+/** 只读文件开头，够取标题和摘要就行，避免列表页把每个文件整读一遍 */
+function readHead(file, bytes = HEAD_BYTES) {
+  try {
+    const fd = fs.openSync(file, 'r')
+    const buffer = Buffer.alloc(bytes)
+    const read = fs.readSync(fd, buffer, 0, bytes, 0)
+    fs.closeSync(fd)
+    return buffer.subarray(0, read).toString('utf8')
+  } catch {
+    return ''
+  }
+}
+
+function titleOf(markdown, file) {
+  const heading = String(markdown)
+    .replace(/^\uFEFF/, '')
+    .split('\n')
+    .find((line) => /^#\s+\S/.test(line))
+  if (heading) return heading.replace(/^#\s+/, '').trim()
+  return path.basename(file, path.extname(file))
+}
+
+function collectRecords(dir, prefix, acc) {
+  let entries
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true })
+  } catch {
+    return acc
+  }
+
+  for (const entry of entries) {
+    if (entry.name.startsWith('.')) continue
+    const full = path.join(dir, entry.name)
+
+    if (entry.isDirectory()) {
+      collectRecords(full, `${prefix}${entry.name}/`, acc)
+      continue
+    }
+    if (!/\.md$/i.test(entry.name)) continue
+
+    let stat
+    try {
+      stat = fs.statSync(full)
+    } catch {
+      continue
+    }
+    if (!stat.isFile() || stat.size > RECORD_MAX_BYTES) continue
+
+    const head = readHead(full)
+    acc.push({
+      file: `${prefix}${entry.name}`,
+      title: titleOf(head, entry.name),
+      excerpt: plainText(head),
+      size: stat.size,
+      updatedAt: stat.mtime.toISOString(),
+    })
+  }
+  return acc
+}
+
+function listRecords() {
+  return collectRecords(RECORDS_DIR, '', []).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+}
+
+function readRecord(requestPath) {
+  let decoded
+  try {
+    decoded = decodeURIComponent(String(requestPath || '').replace(/^\/+/, ''))
+  } catch {
+    return null
+  }
+  if (!decoded || decoded.includes('\0')) return null
+
+  const full = path.resolve(RECORDS_DIR, decoded)
+  const rel = path.relative(RECORDS_DIR, full)
+  if (!rel || rel === '..' || rel.startsWith(`..${path.sep}`) || path.isAbsolute(rel)) return null
+  if (!/\.md$/i.test(full)) return null
+
+  let stat
+  try {
+    stat = fs.statSync(full)
+  } catch {
+    return null
+  }
+  if (!stat.isFile() || stat.size > RECORD_MAX_BYTES) return null
+
+  const source = fs.readFileSync(full, 'utf8')
+  return {
+    file: rel.split(path.sep).join('/'),
+    title: titleOf(source, rel),
+    size: stat.size,
+    updatedAt: stat.mtime.toISOString(),
+    html: renderMarkdown(source),
+  }
+}
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`)
   const pathname = url.pathname
@@ -131,6 +234,16 @@ const server = http.createServer(async (req, res) => {
       return res.end()
     }
     return handleRefresh(res)
+  }
+
+  if (pathname === '/api/records') {
+    const items = listRecords()
+    return sendJson(res, 200, { count: items.length, items })
+  }
+
+  if (pathname.startsWith('/api/records/')) {
+    const record = readRecord(pathname.slice('/api/records'.length))
+    return record ? sendJson(res, 200, record) : sendJson(res, 404, { error: 'not found' })
   }
 
   if (pathname.startsWith('/data/')) {

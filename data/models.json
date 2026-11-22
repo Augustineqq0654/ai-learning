@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-17",
+  "updatedAt": "2026-11-22",
   "statsThrough": "2026-11-09",
   "note": "用量榜名次来自 OpenRouter 周榜（自动更新），价格为 OpenRouter 挂牌价 USD/百万 token（自动更新）；额度、场景推荐、用途说明为人工维护。用量数字为上次人工核对值，新上榜模型会显示 —。",
   "conclusion": [
@@ -121,7 +121,7 @@
     {
       "tier": "S",
       "name": "GLM 5.3 Flash",
-      "price": "$0.04 / $0.08",
+      "price": "$0.15 / $0.50",
       "quota": "$60",
       "best": "快速改码、短问答、子 Agent",
       "note": "短问题 83 分",
@@ -193,7 +193,7 @@
       "note": "日用量一周 +112%",
       "orId": "xiaomi/mimo-v2.6-flash",
       "priceSource": "OpenRouter",
-      "ctx": 1050000
+      "ctx": 1048576
     },
     {
       "tier": "A",
@@ -250,7 +250,7 @@
     {
       "tier": "A",
       "name": "Kimi K2.7 Code",
-      "price": "$0.70 / $3.75",
+      "price": "$0.60 / $3.00",
       "quota": "$60",
       "best": "专用编码，适合长跑",
       "note": "代码专精",
@@ -330,7 +330,7 @@
       "note": "每任务最便宜",
       "orId": "xiaomi/mimo-v2.6-pro",
       "priceSource": "OpenRouter",
-      "ctx": 1050000
+      "ctx": 1048576
     },
     {
       "tier": "B",
@@ -346,7 +346,7 @@
     {
       "tier": "B",
       "name": "Hy3",
-      "price": "$0.13 / $0.53",
+      "price": "$0.14 / $0.58",
       "quota": "$60",
       "best": "老款走量",
       "note": "Hy4 的前代",
@@ -399,15 +399,6 @@
     },
     {
       "rank": 2,
-      "name": "Hy4",
-      "vendor": "腾讯",
-      "orId": "tencent/hy4",
-      "weekly": "16.0T",
-      "share": 11.8,
-      "best": "中文通用、Agent"
-    },
-    {
-      "rank": 3,
       "name": "DeepSeek V4.1 Flash",
       "vendor": "DeepSeek",
       "orId": "deepseek/deepseek-v4.1-flash",
@@ -416,7 +407,7 @@
       "best": "同上，稳定版"
     },
     {
-      "rank": 4,
+      "rank": 3,
       "name": "GLM 5.3 Flash",
       "vendor": "Z.ai",
       "orId": "z-ai/glm-5.3-flash",
@@ -425,7 +416,7 @@
       "best": "日常改码、短问答"
     },
     {
-      "rank": 5,
+      "rank": 4,
       "name": "GPT-6 Luna",
       "vendor": "OpenAI",
       "orId": "openai/gpt-6-luna",
@@ -434,7 +425,7 @@
       "best": "通用对话、工具调用"
     },
     {
-      "rank": 6,
+      "rank": 5,
       "name": "Claude Opus 5.5",
       "vendor": "Anthropic",
       "orId": "anthropic/claude-opus-5.5",
@@ -443,7 +434,34 @@
       "best": "复杂重构、代码审查"
     },
     {
+      "rank": 6,
+      "name": "Hy4 flash",
+      "vendor": "腾讯",
+      "orId": "tencent/hy4-flash",
+      "weekly": null,
+      "share": null,
+      "best": ""
+    },
+    {
       "rank": 7,
+      "name": "MiniMax M3.1 Flash",
+      "vendor": "MiniMax",
+      "orId": "minimax/minimax-m3.1-flash",
+      "weekly": null,
+      "share": null,
+      "best": ""
+    },
+    {
+      "rank": 8,
+      "name": "Kimi K3.1 Pro",
+      "vendor": "Moonshot",
+      "orId": "moonshotai/kimi-k3.1-pro",
+      "weekly": null,
+      "share": null,
+      "best": ""
+    },
+    {
+      "rank": 9,
       "name": "Step 5 Preview",
       "vendor": "StepFun",
       "orId": "stepfun/step-5-preview",
@@ -452,28 +470,10 @@
       "best": "终端、自动化、工具链"
     },
     {
-      "rank": 8,
+      "rank": 10,
       "name": "MiMo-V2.6-Flash",
       "vendor": "xiaomi",
       "orId": "xiaomi/mimo-v2.6-flash",
-      "weekly": null,
-      "share": null,
-      "best": ""
-    },
-    {
-      "rank": 9,
-      "name": "GLM 5.3",
-      "vendor": "Z.ai",
-      "orId": "z-ai/glm-5.3",
-      "weekly": null,
-      "share": null,
-      "best": ""
-    },
-    {
-      "rank": 10,
-      "name": "GPT-6.1 Sol",
-      "vendor": "OpenAI",
-      "orId": "openai/gpt-6.1-sol",
       "weekly": null,
       "share": null,
       "best": ""
@@ -484,17 +484,18 @@
     "用 variant 控制思考深度：格式化用 low，debug 用 high，别一路 max 烧 token。",
     "错峰使用：DeepSeek 低峰价是高峰的一半，批量任务挪到低峰跑。"
   ],
-  "priceUpdatedAt": "2026-11-17",
-  "priceMatched": 21,
+  "priceUpdatedAt": "2026-11-22",
+  "priceMatched": 20,
   "priceMissed": [
     "DeepSeek V4 Pro",
+    "LongCat 2.0",
     "Qwen3.8 Max",
     "Beam Free",
     "Iceman Contributor Free",
     "LongCat 2.5 Free",
     "Crouton Alpha"
   ],
-  "rankUpdatedAt": "2026-11-17",
-  "rankThrough": "2026-11-16",
-  "lastAttemptAt": "2026-11-17T12:47:36.280Z"
+  "rankUpdatedAt": "2026-11-22",
+  "rankThrough": "2026-11-21",
+  "lastAttemptAt": "2026-11-22T12:04:54.474Z"
 }

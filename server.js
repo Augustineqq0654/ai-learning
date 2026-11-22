@@ -53,10 +53,23 @@ async function serveFile(res, filePath) {
   }
 }
 
+/**
+ * 把请求路径解析到 base 之内，越界或无法解码时返回 null。
+ * 用 path.relative 判断包含关系：startsWith 会把兄弟目录（data-evil）当成 base。
+ */
 function safeJoin(base, requestPath) {
-  const decoded = decodeURIComponent(requestPath)
-  const full = path.join(base, decoded)
-  return full.startsWith(base) ? full : null
+  let decoded
+  try {
+    decoded = decodeURIComponent(requestPath)
+  } catch {
+    return null
+  }
+  if (decoded.includes('\0')) return null
+
+  const full = path.resolve(base, decoded.replace(/\\/g, '/').replace(/^\/+/, ''))
+  const rel = path.relative(base, full)
+  if (rel === '..' || rel.startsWith(`..${path.sep}`) || path.isAbsolute(rel)) return null
+  return full
 }
 
 const SCRIPTS = ['fetch-data.js', 'fetch-models.js']

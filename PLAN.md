@@ -96,9 +96,11 @@
 | HuggingFace Papers | 英 | 论文 | ❌ 直连失败 | 需代理 |
 | 机器之心 | 中 | 资讯 | ⚠️ rss 404 | 暂不接入 |
 
-**第一版接入**：AIHOT、量子位、OpenAI、DeepMind、Simon Willison、Hacker News、GitHub Trending（7 个，全部已验证可用）。
+**当前启用**：AIHOT、量子位、OpenAI、DeepMind、Simon Willison、Hacker News、GitHub Trending（7 个，以 `sources.json` 为准）。
 
-**第二版补充**：Anthropic（HTML 解析）、HuggingFace Papers（需代理）。
+**未接入**：Anthropic（无 RSS，需 HTML 解析）、HuggingFace Papers（直连失败，需代理）、机器之心（rss 404）。
+
+上表「实测」是 2026-11-08 的快照；源会时好时坏，单轮结果以 `data/news.json` 的 `sources` / `degraded` 为准（2026-11-22 这轮 HN 失败，其余 6 个正常）。
 
 ### 4.2 代理处理
 
@@ -118,9 +120,10 @@ const dispatcher = proxy ? new ProxyAgent(proxy) : undefined
 
 ### 4.3 抓取约束
 
-- 并发上限 6，单源超时 15s，整体超时 60s
-- 结果写入 `data/news.json`，覆盖式（保留最近 3 天用于去重比对）
-- 抓取失败时**保留上次数据**，页面顶部显示"数据更新于 x 小时前"
+- 并发上限 4（`sources.json` 的 `limits.concurrency`，改完下一次抓取生效）
+- 单源超时 15s、失败重试 1 次（`lib/net.js`）
+- 结果覆盖写入 `data/news.json`：只保留 96 小时内的候选，去重打分后取前 8 条（`limits.maxAgeHours` / `limits.maxItems`）
+- 全部源失败时保留上一次数据并标 `stale`，页面顶部显示"数据更新于 x 小时前"
 - 不登录、不绕付费墙、不抓全文，只取标题 + 摘要 + 链接
 
 ### 4.4 教程来源
@@ -150,6 +153,16 @@ const dispatcher = proxy ? new ProxyAgent(proxy) : undefined
 - 模型名只在「归一化后唯一同名」时匹配，避免把 Flash 和 FlashX 弄混；匹配不上的保留人工价，页面底部会写明是哪几个
 - 用量数字没有公开接口，所以不显示也不猜，只保留名次
 - 内容没变化时不写盘，避免每次自动刷新把 git 工作区弄脏
+
+### 4.6 提示词与学习记录（不抓取）
+
+| 内容 | 来源 | 更新方式 |
+|---|---|---|
+| 24 条预置提示词模板 | 本机 `dsh-prompt` 插件的 `lib/client.js`（`PRESET_TEMPLATES`） | `npm run update:prompts` 重新抽取 |
+| 学习记录 | 项目根目录 `records/` 下的 `.md`，支持子文件夹 | 放文件即可，服务端按请求渲染 |
+
+- 提示词抽取只读本机文件、不联网；插件没装时只打印警告，`data/prompts.json` 保持原样
+- `records/` 单文件上限 2 MB，隐藏文件跳过，Markdown 渲染默认转义 HTML
 
 ---
 
@@ -419,7 +432,7 @@ score = 0.40 × 阶段匹配
 | 层 | 选择 | 理由 |
 |---|---|---|
 | 前端 | 原生 HTML / CSS / ES Module，无构建 | 每页一个模块，改哪页看哪个文件；浏览器原生加载，仍然没有构建步骤 |
-| 服务 | `server.js`，Node 原生 `http` | 只做两件事：发静态文件、触发刷新 |
+| 服务 | `server.js`，Node 原生 `http` | 只做三件事：发静态文件、触发刷新、渲染 `records/` |
 | 抓取 | `fetch-data.js` + `fetch-models.js`，`lib/net.js` 统一网络层 | 代理自动发现、超时重试只写一遍 |
 | 数据 | JSON 文件 | 人可读、可手改、可直接备份 |
 | 状态 | localStorage | 不需要后端即可保存进度 |
@@ -483,6 +496,7 @@ npm run daily          # update + 起服务（日常用这个）
 ### 9.4 前端交互
 
 - 首屏读 `data/*.json`，本地渲染，无框架
+- 记录页例外：走 `GET /api/records` 列目录、`GET /api/records/<路径>` 取渲染后的 HTML，不参与首屏数据加载
 - "立即更新"按钮 → `POST /api/refresh` → 服务端跑抓取 → 返回后局部刷新列表
 - 任务勾选 → 写 localStorage → 更新进度条和连续天数
 - 阶段切换 → 写 localStorage → 今日任务随之换成新阶段的第一个未完成项
@@ -512,8 +526,8 @@ npm run daily          # update + 起服务（日常用这个）
 ### M2 · 能用（已完成）
 
 - [x] `roadmap.json` 五阶段 + 30 个任务
-- [x] `projects.json` 15 个研发向项目
-- [x] `tutorials.json` 12 个常驻精选教程
+- [x] `projects.json` 9 个项目
+- [x] `tutorials.json` 13 个常驻精选教程
 - [x] "我在这一步" + "今日任务" + 进度 + 连续天数
 - [x] 今日新发现（GitHub Trending 单列，不混进新闻流）
 - [x] 验收：打开就知道今天该做什么，勾选后进度保存，重开还在

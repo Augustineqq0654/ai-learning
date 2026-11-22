@@ -20,7 +20,7 @@
 
 ```bash
 npm install
-npm run update   # 抓一次新闻 + 选型数据
+npm run update   # 抓一次新闻、选型，再从本机 dsh-prompt 抽提示词
 npm run dev      # 打开 http://127.0.0.1:5173
 ```
 
@@ -43,6 +43,8 @@ npm run daily    # 先抓数据，再起服务
 | Simon Willison、Hacker News | 英文技术社区 |
 | GitHub Trending | 今日热门仓库（单独展示） |
 | OpenRouter | 模型价格、上下文长度、周榜名次（选型页） |
+| 本机 dsh-prompt 插件 | 24 条预置提示词模板（`data/prompts.json`，不联网） |
+| `records/` 目录 | 你自己的 Markdown 学习笔记，服务端渲染 |
 
 选型页只自动更新能验证的部分：**价格**和**榜单名次**。额度、场景推荐、用途说明是人工维护的，不会被覆盖；用量数字 OpenRouter 没有公开接口，所以不显示，也不猜。
 
@@ -56,7 +58,7 @@ npm run daily    # 先抓数据，再起服务
 - 改教程清单 → `data/tutorials.json`
 - 改模型选型 → `data/models.json`
 - 改配色和排版 → `public/css/style.css`
-- 改某个页面的渲染 → `public/js/pages/` 下对应的文件（`news` / `study` / `projects` / `tutorials` / `models` / `prompts`）
+- 改某个页面的渲染 → `public/js/pages/` 下对应的文件（`news` / `study` / `projects` / `tutorials` / `models` / `prompts` / `records`）
 - 更新提示词卡片 → `npm run update:prompts`（从本机已安装的 dsh-prompt 重新抽取，结果在 `data/prompts.json`）
 - 写学习记录 → 往 `records/` 里丢 `.md`，刷新「记录」页即可，不用改代码（子文件夹也行）
 
@@ -64,7 +66,7 @@ npm run daily    # 先抓数据，再起服务
 
 ## 实现要点
 
-- 零构建：原生 HTML / CSS / JS，改完刷新就生效
+- 零构建：原生 HTML / CSS / ES Module，改完刷新就生效
 - 唯一依赖 `undici`，用于走代理
 - 单源失败不影响整体，页面照常显示其余内容
 - 一轮全挂时保留上次数据，不会白屏

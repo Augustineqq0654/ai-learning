@@ -53,7 +53,8 @@ npm run daily    # 先抓数据，再起服务
 - 改项目库 → `data/projects.json`
 - 改教程清单 → `data/tutorials.json`
 - 改模型选型 → `data/models.json`
-- 改配色和排版 → `public/style.css`
+- 改配色和排版 → `public/css/style.css`
+- 改某个页面的渲染 → `public/js/pages/` 下对应的文件（`news` / `study` / `projects` / `tutorials` / `models`）
 
 学习进度存在浏览器的 localStorage，不备份也不上传。清缓存会丢进度。
 

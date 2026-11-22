@@ -1,4 +1,4 @@
-﻿# AI 学习驾驶舱 · 方案文档
+# AI 学习驾驶舱 · 方案文档
 
 > 版本 v0.1 ｜ 状态：待确认 ｜ 形态：本地静态页 + 抓取脚本
 
@@ -414,7 +414,7 @@ score = 0.40 × 阶段匹配
 
 | 层 | 选择 | 理由 |
 |---|---|---|
-| 前端 | 原生 HTML / CSS / JS，无构建 | 单文件改起来快，没有构建等待，不需要 node_modules |
+| 前端 | 原生 HTML / CSS / ES Module，无构建 | 每页一个模块，改哪页看哪个文件；浏览器原生加载，仍然没有构建步骤 |
 | 服务 | `server.js`，Node 原生 `http` | 只做两件事：发静态文件、触发刷新 |
 | 抓取 | `fetch-data.js` + `fetch-models.js`，`lib/net.js` 统一网络层 | 代理自动发现、超时重试只写一遍 |
 | 数据 | JSON 文件 | 人可读、可手改、可直接备份 |
@@ -444,8 +444,17 @@ ai-learning/
    ├─ projects.html         # 项目库
    ├─ tutorials.html        # 精选教程
    ├─ models.html           # 模型选型
-   ├─ app.js                # 按 data-page 只渲染当前页
-   └─ style.css
+   ├─ css/
+   │  └─ style.css
+   └─ js/
+      ├─ boot.js            # 装配：取数 → 调当前页 render() → 绑更新
+      ├─ core.js            # 公共：DOM 工具、localStorage 状态、数据容器
+      └─ pages/
+         ├─ news.js         # 速览：状态条 / 分类 / 新闻列表
+         ├─ study.js        # 学习：阶段 / 今日任务
+         ├─ projects.js     # 项目库：新发现 / 项目卡片
+         ├─ tutorials.js    # 教程：按阶段分组
+         └─ models.js       # 选型：场景 / 模型表 / 用量榜
 ```
 
 ### 9.3 命令

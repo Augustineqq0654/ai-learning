@@ -6,6 +6,7 @@ import * as studyPage from './pages/study.js'
 import * as projectsPage from './pages/projects.js'
 import * as tutorialsPage from './pages/tutorials.js'
 import * as modelsPage from './pages/models.js'
+import * as promptsPage from './pages/prompts.js'
 
 const PAGES = {
   news: newsPage,
@@ -13,6 +14,7 @@ const PAGES = {
   projects: projectsPage,
   tutorials: tutorialsPage,
   models: modelsPage,
+  prompts: promptsPage,
 }
 
 const STALE_NEWS_MS = 6 * 3600 * 1000
@@ -108,12 +110,13 @@ function bindRefresh() {
 async function boot() {
   Object.assign(state, loadState())
 
-  const [n, r, p, t, m] = await Promise.allSettled([
+  const [n, r, p, t, m, q] = await Promise.allSettled([
     getJson('/api/news'),
     getJson('/data/roadmap.json'),
     getJson('/data/projects.json'),
     getJson('/data/tutorials.json'),
     getJson('/data/models.json'),
+    getJson('/data/prompts.json'),
   ])
 
   data.news = n.status === 'fulfilled' ? n.value : null
@@ -121,6 +124,7 @@ async function boot() {
   data.projects = p.status === 'fulfilled' ? p.value : null
   data.tutorials = t.status === 'fulfilled' ? t.value : null
   data.models = m.status === 'fulfilled' ? m.value : null
+  data.prompts = q.status === 'fulfilled' ? q.value : null
 
   // 没手动选过阶段时，跟随 roadmap 的当前阶段；手动选过就不再覆盖
   if (data.roadmap?.currentStage != null && !state.stagePinned) state.stage = data.roadmap.currentStage

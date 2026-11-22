@@ -104,4 +104,5 @@ export const data = {
   projects: null,
   tutorials: null,
   models: null,
+  prompts: null,
 }
